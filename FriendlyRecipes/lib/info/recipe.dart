@@ -16,14 +16,8 @@ class Recipe {
     favourite = json['favourite'];
   }
 
-  Recipe(
-    this.title,
-    this.location,
-    this.date,
-    this.description,
-    this.basePhoto,
-    this.favourite
-  );
+  Recipe(this.title, this.location, this.date, this.description, this.basePhoto,
+      this.favourite);
 
   // void addFavRecipe(Recipe r) {
   //   favrecipes.add(r);
@@ -36,19 +30,23 @@ class RecipeList {
 }
 
 Future<List<Recipe>> loadRecipeList() async {
-  String data = await rootBundle.loadString('assets/recipes.json');
-  var json = jsonDecode(data);
-  List<Recipe> recipes = [];
-  for (var r in json['recipes']) {
-    recipes.add(Recipe.fromJson(r));
+  try {
+    String data = await rootBundle.loadString('assets/recipes.json');
+    var json = jsonDecode(data);
+    List<Recipe> recipes = [];
+    for (var r in json['recipes']) {
+      recipes.add(Recipe.fromJson(r));
+    }
+    return recipes;
+  } catch (e) {
+    return [];
   }
-  return recipes;
 }
 
 class RecipeFavList {
   List<Recipe> favrecipes;
   RecipeFavList(this.favrecipes);
-  
+
   void addFavRecipe(Recipe r) {
     favrecipes.add(r);
   }

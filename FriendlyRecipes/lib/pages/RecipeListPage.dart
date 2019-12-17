@@ -38,6 +38,9 @@ class _FoodRecipeListPage extends State<FoodRecipeListPage> {
   @override
   Widget build(BuildContext context) {
     //List<Recipe> _recipes = Provider.of<List<Recipe>>(context);
+    if (_recipes == null) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Recipe List'),
