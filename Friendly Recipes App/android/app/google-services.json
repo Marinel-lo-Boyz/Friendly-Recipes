@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "124248989728",
+    "firebase_url": "https://friendlyrecipes-app.firebaseio.com",
+    "project_id": "friendlyrecipes-app",
+    "storage_bucket": "friendlyrecipes-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124248989728:android:e2067d1d08d5c6bba69c45",
+        "android_client_info": {
+          "package_name": "com.example.friendly_recipes_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124248989728-rbv0l6fl9e7jd9ogqo7oovtd8ia845gr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANn55s3LbYr0YAhw_SM6gMoozqTvHP32Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124248989728-rbv0l6fl9e7jd9ogqo7oovtd8ia845gr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
