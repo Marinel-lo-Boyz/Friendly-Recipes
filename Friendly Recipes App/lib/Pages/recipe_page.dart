@@ -37,18 +37,17 @@ class _RecipePage extends State<RecipePage> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: Text(
-            '',
-            style: TextStyle(fontSize: 20),
-          ),
-          // leading: Icon(Icons.arrow_back_ios, color: Colors.white,),
-          leading: new IconButton(icon: new Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context),
-          )
-          
-        ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: Text(
+              '',
+              style: TextStyle(fontSize: 20),
+            ),
+            // leading: Icon(Icons.arrow_back_ios, color: Colors.white,),
+            leading: new IconButton(
+              icon: new Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.pop(context),
+            )),
         body: Stack(
           children: <Widget>[
             //background image
@@ -152,46 +151,106 @@ class __InfoState extends State<_Info> {
   Widget build(BuildContext context) {
     //final _recipe = Provider.of<Recipe>(context);
     return Container(
-      margin: EdgeInsets.only(top: 385),
-      padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-        color: Colors.white,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 30),
-          ),
-          Text(
-            "Pizza de hojaldre", //recipe.title,
-            style: TextStyle(
-              fontFamily: 'Bodoni',
-              fontWeight: FontWeight.w700,
-              fontSize: 42,
-              color: Color.fromARGB(255, 60, 22, 48),
+    margin: EdgeInsets.only(top: 385),
+        padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+          color: Colors.white,
+        ),
+      child: SingleChildScrollView(
+        
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 30),
             ),
-          ),
-          SizedBox(height: 12),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              _iconText(Icons.local_dining, "Starter"), //recipe.location),
-              SizedBox(height: 20),
-              _iconText(Icons.calendar_today, "26 Enero 2020"), //recipe.date),
-              SizedBox(height: 12),
-              Text(
-                "Pillas la masa del merca, xd, y despues te la llevas pa tu kelly pa ponerle el tomatico el quesillo y las vaynas que quieras meterle por ensima. La metes pal hornico y a mirar un ratillo para aser ver que todo va bien. Para finalisar, cogemos a la parienta y (corten). Para finalisar cogemos los guantesicos de la iaia y la sacamos sin quemarnos yuis, y ya ta, una croquitatah y palaboca. caproveche!", //recipe.description,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Color.fromARGB(200, 86, 61, 94),
-                ),
+            Text(
+              "Pizza de hojaldre", //recipe.title,
+              style: TextStyle(
+                fontFamily: 'Bodoni',
+                fontWeight: FontWeight.w700,
+                fontSize: 42,
+                color: Color.fromARGB(255, 60, 22, 48),
               ),
-            ],
-          )
-        ],
+            ),
+            SizedBox(height: 12),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                _iconText(Icons.local_dining, "Starter"), //recipe.location),
+                SizedBox(height: 20),
+                _iconText(
+                    Icons.calendar_today, "26 Enero 2020"), //recipe.date),
+                SizedBox(height: 12),
+                Text(
+                  "Pillas la masa del merca, xd, y despues te la llevas pa tu kelly pa ponerle el tomatico el quesillo y las vaynas que quieras meterle por ensima. La metes pal hornico y a mirar un ratillo para aser ver que todo va bien. Para finalisar, cogemos a la parienta y (corten). Para finalisar cogemos los guantesicos de la iaia y la sacamos sin quemarnos yuis, y ya ta, una croquitatah y palaboca. caproveche!", //recipe.description,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color.fromARGB(200, 86, 61, 94),
+                  ),
+                ),
+                 Text(
+                  "Pillas la masa del merca, xd, y despues te la llevas pa tu kelly pa ponerle el tomatico el quesillo y las vaynas que quieras meterle por ensima. La metes pal hornico y a mirar un ratillo para aser ver que todo va bien. Para finalisar, cogemos a la parienta y (corten). Para finalisar cogemos los guantesicos de la iaia y la sacamos sin quemarnos yuis, y ya ta, una croquitatah y palaboca. caproveche!", //recipe.description,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color.fromARGB(200, 86, 61, 94),
+                  ),
+                ),
+                 Text(
+                  "Pillas la masa del merca, xd, y despues te la llevas pa tu kelly pa ponerle el tomatico el quesillo y las vaynas que quieras meterle por ensima. La metes pal hornico y a mirar un ratillo para aser ver que todo va bien. Para finalisar, cogemos a la parienta y (corten). Para finalisar cogemos los guantesicos de la iaia y la sacamos sin quemarnos yuis, y ya ta, una croquitatah y palaboca. caproveche!", //recipe.description,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color.fromARGB(200, 86, 61, 94),
+                  ),
+                ),
+                 Text(
+                  "Pillas la masa del merca, xd, y despues te la llevas pa tu kelly pa ponerle el tomatico el quesillo y las vaynas que quieras meterle por ensima. La metes pal hornico y a mirar un ratillo para aser ver que todo va bien. Para finalisar, cogemos a la parienta y (corten). Para finalisar cogemos los guantesicos de la iaia y la sacamos sin quemarnos yuis, y ya ta, una croquitatah y palaboca. caproveche!", //recipe.description,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color.fromARGB(200, 86, 61, 94),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
+
+      // child: Column(
+      //   mainAxisAlignment: MainAxisAlignment.start,
+      //   children: <Widget>[
+      //     Padding(
+      //       padding: EdgeInsets.only(top: 30),
+      //     ),
+      //     Text(
+      //       "Pizza de hojaldre", //recipe.title,
+      //       style: TextStyle(
+      //         fontFamily: 'Bodoni',
+      //         fontWeight: FontWeight.w700,
+      //         fontSize: 42,
+      //         color: Color.fromARGB(255, 60, 22, 48),
+      //       ),
+      //     ),
+      //     SizedBox(height: 12),
+      //     Column(
+      //       mainAxisAlignment: MainAxisAlignment.start,
+      //       children: <Widget>[
+      //         _iconText(Icons.local_dining, "Starter"), //recipe.location),
+      //         SizedBox(height: 20),
+      //         _iconText(Icons.calendar_today, "26 Enero 2020"), //recipe.date),
+      //         SizedBox(height: 12),
+      //         Text(
+      //           "Pillas la masa del merca, xd, y despues te la llevas pa tu kelly pa ponerle el tomatico el quesillo y las vaynas que quieras meterle por ensima. La metes pal hornico y a mirar un ratillo para aser ver que todo va bien. Para finalisar, cogemos a la parienta y (corten). Para finalisar cogemos los guantesicos de la iaia y la sacamos sin quemarnos yuis, y ya ta, una croquitatah y palaboca. caproveche!", //recipe.description,
+      //           style: TextStyle(
+      //             fontSize: 15,
+      //             color: Color.fromARGB(200, 86, 61, 94),
+      //           ),
+      //         ),
+      //       ],
+      //     )
+      //   ],
+      // ),
     );
   }
 }
