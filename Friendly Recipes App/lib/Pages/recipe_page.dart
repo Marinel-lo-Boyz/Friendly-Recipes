@@ -207,7 +207,7 @@ class __InfoState extends State<_Info> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Description",
+                  "Elaboration",
                   style: TextStyle(
                     fontSize: 24,
                     color: Color.fromARGB(200, 86, 61, 94),
