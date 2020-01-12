@@ -1,7 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:friendly_recipes_app/main.dart';
+import 'package:friendly_recipes_app/pages/RecipePage.dart';
+import 'package:friendly_recipes_app/pages/recipe_page.dart';
 
+//Todo: delete
+import 'package:friendly_recipes_app/info/recipe.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,18 +14,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
-@override
+  List<Recipe> _recipes;
+  @override
   void initState() {
     // TODO: implement initState
+    loadRecipeList().then((recipes) {
+      setState(() => _recipes = recipes);
+    });
+
+
+
     super.initState();
     CollectionReference reference = Firestore.instance.collection('recipes');
-reference.snapshots().listen((querySnapshot) {
-    setState(() {
-      
+    reference.snapshots().listen((querySnapshot) {
+      setState(() {});
     });
-});
   }
 
   @override
@@ -39,7 +47,10 @@ reference.snapshots().listen((querySnapshot) {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  Navigator.of(context).pushNamed('BANG');
+                  //Navigator.of(context).pushNamed('BANG');
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => RecipePage()));
+                      //.push(MaterialPageRoute(builder: (_) => FoodRecipe(_recipes[1])));
                 },
                 child: ListTile(
                   title: Text(
