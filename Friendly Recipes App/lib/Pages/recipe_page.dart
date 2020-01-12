@@ -7,28 +7,7 @@ class RecipePage extends StatefulWidget {
 }
 
 class _RecipePage extends State<RecipePage> {
-  Widget _floatingbutton() {
-    final dynamic container = Container(
-      margin: EdgeInsets.only(right: 335),
-      child: FloatingActionButton(
-        backgroundColor: Colors.deepOrange[300],
-        child: Icon(
-          Icons.chevron_left,
-          color: Colors.white,
-          size: 20,
-        ),
-        onPressed: () {},
-      ),
-    );
-
-    return Column(children: <Widget>[
-      Container(
-        height: 0,
-      ),
-      container,
-    ]);
-  }
-
+  bool fav = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -65,18 +44,39 @@ class _RecipePage extends State<RecipePage> {
               Container(
                 height: 350,
               ),
-              Container(
-                margin: EdgeInsets.only(right: 235),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                    size: 30,
-                  ),
-                  onPressed: () {},
-                ),
-              )
+              (fav)
+                  ? Container(
+                      margin: EdgeInsets.only(right: 235),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            fav = !fav;
+                          });
+                        },
+                      ),
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(right: 235),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: Colors.grey,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            fav = !fav;
+                          });
+                        },
+                      ),
+                    ),
             ]),
             //bottom button
             Column(
@@ -151,14 +151,13 @@ class __InfoState extends State<_Info> {
   Widget build(BuildContext context) {
     //final _recipe = Provider.of<Recipe>(context);
     return Container(
-    margin: EdgeInsets.only(top: 385, bottom: 35),
-        padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-          color: Colors.white,
-        ),
+      margin: EdgeInsets.only(top: 385, bottom: 35),
+      padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+        color: Colors.white,
+      ),
       child: SingleChildScrollView(
-        
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -174,28 +173,25 @@ class __InfoState extends State<_Info> {
                 color: Color.fromARGB(255, 60, 22, 48),
               ),
             ),
-            
             SizedBox(height: 12),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 15),
-                 _iconText(
-                    Icons.person, "Alejandro"), //recipe.user),
+                _iconText(Icons.person, "Alejandro"), //recipe.user),
                 SizedBox(height: 20),
                 _iconText(Icons.local_dining, "Starter"), //recipe.location),
                 SizedBox(height: 20),
-                _iconText(
-                    Icons.calendar_today, "15:00, el 26 Enero 2020"), //recipe.date),
+                _iconText(Icons.calendar_today,
+                    "15:00, el 26 Enero 2020"), //recipe.date),
                 SizedBox(height: 35),
-               
+
                 Text(
                   "Ingredients",
                   style: TextStyle(
-                    fontSize: 24,
-                    color: Color.fromARGB(200, 86, 61, 94),
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 24,
+                      color: Color.fromARGB(200, 86, 61, 94),
+                      fontWeight: FontWeight.bold),
                 ),
                 Divider(thickness: 1),
                 Text(
@@ -209,10 +205,9 @@ class __InfoState extends State<_Info> {
                 Text(
                   "Elaboration",
                   style: TextStyle(
-                    fontSize: 24,
-                    color: Color.fromARGB(200, 86, 61, 94),
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 24,
+                      color: Color.fromARGB(200, 86, 61, 94),
+                      fontWeight: FontWeight.bold),
                 ),
                 Divider(thickness: 1),
                 Text(
@@ -222,18 +217,21 @@ class __InfoState extends State<_Info> {
                     color: Color.fromARGB(200, 86, 61, 94),
                   ),
                 ),
-                
+
                 SizedBox(height: 20),
-                Divider(thickness: 2,),
-                 Text(
+                Divider(
+                  thickness: 2,
+                ),
+                Text(
                   "Bon appétit!",
                   style: TextStyle(
-                    fontSize: 20,
-                    color: Color.fromARGB(200, 86, 61, 94),
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 20,
+                      color: Color.fromARGB(200, 86, 61, 94),
+                      fontWeight: FontWeight.bold),
                 ),
-                Divider(thickness: 2,),
+                Divider(
+                  thickness: 2,
+                ),
                 SizedBox(height: 50),
               ],
             )
