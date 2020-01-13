@@ -32,6 +32,8 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            // Row(children: <Widget>[buildIcon(), buildTitle(),],),
+
             buildTitle(),
             SizedBox(
               height: 22,
@@ -82,19 +84,35 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(12),
               color: Colors.white,
             ),
-            child: Center(
-              child: Text(
-                'Friendly Recipes',
-                style: TextStyle(
-                    fontFamily: 'Berlin Sans',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    color: Colors.black54),
-              ),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(right: 22),
+                ),
+                buildIcon(),
+                Center(
+                  child: Text(
+                    'Friendly Recipes',
+                    style: TextStyle(
+                        fontFamily: 'Berlin Sans',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.black54),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget buildIcon() {
+    return Image(
+      image: AssetImage('assets/icon.png'),
+      height: 50,
+      fit: BoxFit.fill,
     );
   }
 
@@ -127,6 +145,17 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Expanded(
           child: Container(
+            child: Center(
+              child: Transform(
+                child: Text(
+                  'Weekly Recipe',
+                  style: TextStyle(
+                      fontFamily: 'Berlin Sans', color: Colors.blueGrey),
+                ),
+                alignment: FractionalOffset.center,
+                transform: Matrix4.identity()..rotateZ(-90 * 3.1415927 / 180),
+              ),
+            ),
             height: 120,
             decoration: BoxDecoration(
               color: Colors.grey[350],
