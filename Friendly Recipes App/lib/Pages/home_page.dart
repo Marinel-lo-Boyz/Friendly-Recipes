@@ -25,15 +25,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 18,
-          horizontal: 40,
+        padding: EdgeInsets.only(
+          top: 18,
+          right: 40,
+          left: 40,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            // Row(children: <Widget>[buildIcon(), buildTitle(),],),
-
             buildTitle(),
             SizedBox(
               height: 22,
@@ -42,12 +42,26 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 22,
             ),
-            buildWeeklyRecipeSection(),
-            SizedBox(
-              height: 22,
+            Expanded(
+              child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: ListView(
+                  // physics: BouncingScrollPhysics(),
+                  children: <Widget>[
+                    buildWeeklyRecipeSection(),
+                    SizedBox(
+                      height: 22,
+                    ),
+                    buildFilters(),
+                    SizedBox(
+                      height: 22,
+                    ),
+                    buildRecipesList(),
+                  ],
+                ),
+              ),
             ),
-            buildFilters(),
-            // Todo: Change on floating action button scaffold
           ],
         ),
       ),
@@ -139,18 +153,23 @@ class _HomePageState extends State<HomePage> {
     return Row(
       children: <Widget>[
         Expanded(
-          child: Container(
-            child: Center(
-              child: Transform(
-                child: Text(
-                  'Weekly Recipe',
-                  style: TextStyle(
-                      fontFamily: 'Berlin Sans', color: Colors.blueGrey),
-                ),
-                alignment: FractionalOffset.center,
-                transform: Matrix4.identity()..rotateZ(-90 * 3.1415927 / 180),
+          flex:3,
+          child: Center(
+            child: Transform(
+              alignment: FractionalOffset.center,
+              transform: Matrix4.identity()..rotateZ(-90 * 3.1415927 / 180),
+              child: Text(
+                'Weekly Recipe',
+                style:
+                    TextStyle(fontFamily: 'Berlin Sans', color: Colors.blueGrey),
               ),
             ),
+          ),
+        ),
+        Expanded(
+           flex:9,
+          child: Container(
+            child: Center(),
             height: 120,
             decoration: BoxDecoration(
               color: Colors.grey[350],
@@ -212,6 +231,37 @@ class _HomePageState extends State<HomePage> {
               fontFamily: 'Berlin Sans',
             )),
       ],
+    );
+  }
+
+  Widget buildRecipesList() {
+    final db = Firestore.instance;
+    return StreamBuilder<QuerySnapshot>(
+      stream: db.collection('recipes').orderBy('name').snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+        List<DocumentSnapshot> groups = snapshot.data.documents;
+        return ListView.builder(
+          padding: EdgeInsets.zero,
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: groups.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text(
+                  groups[index].data['name'],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(groups[index].documentID),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
