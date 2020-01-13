@@ -46,18 +46,13 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 22,
             ),
-            Row(
-              children: <Widget>[
-                buildStarterButton(),
-                buildMainDishButton(),
-                buildDessertButton(),
-                buildFavorituButton(),
-              ],
-            ),
-            buildAddRecipeButton(),
+            buildFilters(),
+            // Todo: Change on floating action button scaffold
           ],
         ),
       ),
+      floatingActionButton: buildAddRecipeButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -167,214 +162,94 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildFavorituButton() {
+  Widget buildFilters() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(right: 50),
+        Expanded(
+          flex: 3,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              buildFilterButton('Starter', Icons.local_dining, Colors.blueGrey),
+              buildFilterButton('Main', Icons.restaurant, Colors.blueGrey),
+              buildFilterButton('Dessert', Icons.cake, Colors.blueGrey),
+            ],
+          ),
         ),
-        Column(
-          children: <Widget>[
-            FloatingActionButton(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.favorite,
-                color: Colors.red,
-                size: 30,
-              ),
-              onPressed: () {},
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            //Text not necessary yet)
-            Text('',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.blueGrey,
-                  fontFamily: 'Berlin Sans',
-                )),
-          ],
+        Expanded(
+          flex: 1,
+          child: SizedBox(),
         ),
+        buildFilterButton('Mg', Icons.favorite, Colors.red),
       ],
     );
   }
 
-  Widget buildStarterButton() {
-    return Row(
+  Widget buildFilterButton(String filterName, IconData icon, Color color) {
+    return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(right: 10),
-        ),
-        Column(
-          children: <Widget>[
-            FloatingActionButton(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.local_dining,
-                color: Colors.blueGrey,
-                size: 30,
-              ),
-              onPressed: () {},
+        Align(
+          child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            child: Icon(
+              icon,
+              color: color,
+              size: 30,
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Text('Starter',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.blueGrey,
-                  fontFamily: 'Berlin Sans',
-                )),
-          ],
+            onPressed: () {},
+          ),
         ),
-      ],
-    );
-  }
-
-  Widget buildMainDishButton() {
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(right: 12),
+        SizedBox(
+          height: 10,
         ),
-        Column(
-          children: <Widget>[
-            FloatingActionButton(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.restaurant,
-                color: Colors.blueGrey,
-                size: 30,
-              ),
-              onPressed: () {},
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text('Main dish',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.blueGrey,
-                  fontFamily: 'Berlin Sans',
-                )),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget buildDessertButton() {
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(right: 12),
-        ),
-        Column(
-          children: <Widget>[
-            FloatingActionButton(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.cake,
-                color: Colors.blueGrey,
-                size: 30,
-              ),
-              onPressed: () {},
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text('Dessert',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.blueGrey,
-                  fontFamily: 'Berlin Sans',
-                )),
-          ],
-        ),
+        //Text not necessary yet)
+        Text(filterName,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.blueGrey,
+              fontFamily: 'Berlin Sans',
+            )),
       ],
     );
   }
 
   Widget buildAddRecipeButton() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Container(
-          height: 305,
-        ),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 7.0, // has the effect of softening the shadow
-                spreadRadius: 2.0, // has the effect of extending the shadow
-                offset: Offset(-5, 8),
-              )
-            ],
-          ),
-          child: SizedBox(
-            height: 65,
-            child: FlatButton.icon(
-              color: Colors.white,
-              shape: StadiumBorder(),
-              label: Text(
-                "Add Recipe",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Berlin Sans',
-                  fontSize: 28,
-                  color: Colors.blueGrey,
-                ),
-              ),
-              icon: Icon(
-                Icons.add,
-                color: Colors.blueGrey,
-                size: 50,
-              ),
-              onPressed: () {},
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 7.0, // has the effect of softening the shadow
+            spreadRadius: 2.0, // has the effect of extending the shadow
+            offset: Offset(-5, 8),
+          )
+        ],
+      ),
+      child: SizedBox(
+        height: 65,
+        child: FlatButton.icon(
+          color: Colors.white,
+          shape: StadiumBorder(),
+          label: Text(
+            "Add Recipe",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Berlin Sans',
+              fontSize: 28,
+              color: Colors.blueGrey,
             ),
           ),
+          icon: Icon(
+            Icons.add,
+            color: Colors.blueGrey,
+            size: 50,
+          ),
+          onPressed: () {},
         ),
-      ],
+      ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   final db = Firestore.instance;
-  //   return Scaffold(
-  //     body: StreamBuilder<QuerySnapshot>(
-  //       stream: db.collection('recipes').orderBy('name').snapshots(),
-  //       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  //         if (!snapshot.hasData) {
-  //           return Center(child: CircularProgressIndicator());
-  //         }
-  //         List<DocumentSnapshot> recipes = snapshot.data.documents;
-  //         return ListView.builder(
-  //           itemCount: recipes.length,
-  //           itemBuilder: (context, index) {
-  //             return InkWell(
-  //               onTap: () {
-  //                 //Navigator.of(context).pushNamed('BANG');
-  //                 Navigator.of(context)
-  //                     .push(MaterialPageRoute(builder: (_) => RecipePage()));
-  //                 //.push(MaterialPageRoute(builder: (_) => FoodRecipe(_recipes[1])));
-  //               },
-  //               child: ListTile(
-  //                 title: Text(
-  //                   recipes[index].data['name'],
-  //                   style: TextStyle(fontWeight: FontWeight.bold),
-  //                 ),
-  //                 subtitle: Text(recipes[index].documentID),
-  //               ),
-  //             );
-  //           },
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 }

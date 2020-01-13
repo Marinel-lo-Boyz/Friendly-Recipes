@@ -1,4 +1,4 @@
-import 'package:friendly_recipes_app/info/recipe.dart';
+import 'package:friendly_recipes_app/Containers/recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
