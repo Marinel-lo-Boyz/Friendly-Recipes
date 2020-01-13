@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 // import 'package:friendly_recipes_app/pages/home_page.dart';
 
 class RecipePage extends StatefulWidget {
@@ -8,6 +10,15 @@ class RecipePage extends StatefulWidget {
 
 class _RecipePage extends State<RecipePage> {
   bool fav = false;
+  dynamic _image;
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,7 +113,10 @@ class _RecipePage extends State<RecipePage> {
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      getImage();
+                      
+                    },
                   ),
                 ),
               ],
