@@ -130,6 +130,7 @@ class _RecipePage extends State<RecipePage> {
                       "Add Picture",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontFamily: 'Berlin Sans',
                         fontSize: 20,
                         color: Colors.white,
                       ),

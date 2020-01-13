@@ -41,6 +41,18 @@ class _HomePageState extends State<HomePage> {
               height: 22,
             ),
             buildWeeklyRecipeSection(),
+            SizedBox(
+              height: 22,
+            ),
+            Row(
+              children: <Widget>[
+                buildStarterButton(),
+                buildMainDishButton(),
+                buildDessertButton(),
+                buildFavorituButton(),
+              ],
+            ),
+            buildAddRecipeButton(),
           ],
         ),
       ),
@@ -126,7 +138,181 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  
+  Widget buildFavorituButton() {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 50),
+        ),
+        Column(
+          children: <Widget>[
+            FloatingActionButton(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.favorite,
+                color: Colors.red,
+                size: 30,
+              ),
+              onPressed: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            //Text not necessary yet)
+            Text('',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.blueGrey,
+                  fontFamily: 'Berlin Sans',
+                )),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildStarterButton() {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 10),
+        ),
+        Column(
+          children: <Widget>[
+            FloatingActionButton(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.local_dining,
+                color: Colors.blueGrey,
+                size: 30,
+              ),
+              onPressed: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text('Starter',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.blueGrey,
+                  fontFamily: 'Berlin Sans',
+                )),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildMainDishButton() {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 12),
+        ),
+        Column(
+          children: <Widget>[
+            FloatingActionButton(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.restaurant,
+                color: Colors.blueGrey,
+                size: 30,
+              ),
+              onPressed: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text('Main dish',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.blueGrey,
+                  fontFamily: 'Berlin Sans',
+                )),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildDessertButton() {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 12),
+        ),
+        Column(
+          children: <Widget>[
+            FloatingActionButton(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.cake,
+                color: Colors.blueGrey,
+                size: 30,
+              ),
+              onPressed: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text('Dessert',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.blueGrey,
+                  fontFamily: 'Berlin Sans',
+                )),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildAddRecipeButton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Container(
+          height: 305,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 7.0, // has the effect of softening the shadow
+                spreadRadius: 2.0, // has the effect of extending the shadow
+                offset: Offset(-5, 8),
+              )
+            ],
+          ),
+          child: SizedBox(
+            height: 65,
+            child: FlatButton.icon(
+              color: Colors.white,
+              shape: StadiumBorder(),
+              label: Text(
+                "Add Recipe",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Berlin Sans',
+                  fontSize: 28,
+                  color: Colors.blueGrey,
+                ),
+              ),
+              icon: Icon(
+                Icons.add,
+                color: Colors.blueGrey,
+                size: 50,
+              ),
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   // @override
   // Widget build(BuildContext context) {
   //   final db = Firestore.instance;
