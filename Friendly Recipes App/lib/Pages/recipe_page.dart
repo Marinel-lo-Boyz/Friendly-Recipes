@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 // import 'package:friendly_recipes_app/pages/home_page.dart';
 
 class RecipePage extends StatefulWidget {
@@ -7,26 +9,25 @@ class RecipePage extends StatefulWidget {
 }
 
 class _RecipePage extends State<RecipePage> {
-  Widget _floatingbutton() {
-    final dynamic container = Container(
-      margin: EdgeInsets.only(right: 335),
-      child: FloatingActionButton(
-        backgroundColor: Colors.deepOrange[300],
-        child: Icon(
-          Icons.chevron_left,
-          color: Colors.white,
-          size: 20,
-        ),
-        onPressed: () {},
-      ),
-    );
+  bool fav = false;
+  dynamic _image;
 
-    return Column(children: <Widget>[
-      Container(
-        height: 0,
-      ),
-      container,
-    ]);
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Widget _foodimage(dynamic _image, double _maxheigh) {
+    //, double _maxwidth) {
+    return Image(
+      image: FileImage(_image),
+
+      height: _maxheigh,
+      //width: _maxwidth,
+      fit: BoxFit.fill,
+    );
   }
 
   @override
@@ -60,49 +61,87 @@ class _RecipePage extends State<RecipePage> {
 
             //text info
             _Info(),
+            Row(
+              children: <Widget>[
+                SizedBox(width: 30),
+                Column(
+                  children: <Widget>[
+                    SizedBox(height: 100),
+                    _image == null ? new Text('') : _foodimage(_image, 250),
+                    
+                    // new Text(Image.file(_image).width.toString(),
+                    //     style: TextStyle(fontSize: 90)),
+                  ],
+                )
+              ],
+            ),
 
             Column(children: <Widget>[
               Container(
                 height: 350,
               ),
-              Container(
-                margin: EdgeInsets.only(right: 235),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                    size: 30,
-                  ),
-                  onPressed: () {},
-                ),
-              )
+              (fav)
+                  ? Container(
+                      margin: EdgeInsets.only(right: 235),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            fav = !fav;
+                          });
+                        },
+                      ),
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(right: 235),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: Colors.grey,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            fav = !fav;
+                          });
+                        },
+                      ),
+                    ),
             ]),
             //bottom button
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
-                  height: 765,
+                  height: 740,
                 ),
-                Expanded(
+                SizedBox(
+                  height: 75,
                   child: FlatButton.icon(
                     color: Colors.deepOrange[400],
                     shape: StadiumBorder(),
-                    icon: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 35,
-                    ),
                     label: Text(
-                      "Add Photo",
+                      "Add Picture",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: () {},
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                    onPressed: () {
+                      getImage();
+                    },
                   ),
                 ),
               ],
@@ -151,14 +190,13 @@ class __InfoState extends State<_Info> {
   Widget build(BuildContext context) {
     //final _recipe = Provider.of<Recipe>(context);
     return Container(
-    margin: EdgeInsets.only(top: 385, bottom: 35),
-        padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-          color: Colors.white,
-        ),
+      margin: EdgeInsets.only(top: 385, bottom: 35),
+      padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+        color: Colors.white,
+      ),
       child: SingleChildScrollView(
-        
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -174,28 +212,25 @@ class __InfoState extends State<_Info> {
                 color: Color.fromARGB(255, 60, 22, 48),
               ),
             ),
-            
             SizedBox(height: 12),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 15),
-                 _iconText(
-                    Icons.person, "Alejandro"), //recipe.user),
+                _iconText(Icons.person, "Alejandro"), //recipe.user),
                 SizedBox(height: 20),
                 _iconText(Icons.local_dining, "Starter"), //recipe.location),
                 SizedBox(height: 20),
-                _iconText(
-                    Icons.calendar_today, "15:00, el 26 Enero 2020"), //recipe.date),
+                _iconText(Icons.calendar_today,
+                    "15:00, el 26 Enero 2020"), //recipe.date),
                 SizedBox(height: 35),
-               
+
                 Text(
                   "Ingredients",
                   style: TextStyle(
-                    fontSize: 24,
-                    color: Color.fromARGB(200, 86, 61, 94),
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 24,
+                      color: Color.fromARGB(200, 86, 61, 94),
+                      fontWeight: FontWeight.bold),
                 ),
                 Divider(thickness: 1),
                 Text(
@@ -209,10 +244,9 @@ class __InfoState extends State<_Info> {
                 Text(
                   "Elaboration",
                   style: TextStyle(
-                    fontSize: 24,
-                    color: Color.fromARGB(200, 86, 61, 94),
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 24,
+                      color: Color.fromARGB(200, 86, 61, 94),
+                      fontWeight: FontWeight.bold),
                 ),
                 Divider(thickness: 1),
                 Text(
@@ -222,18 +256,21 @@ class __InfoState extends State<_Info> {
                     color: Color.fromARGB(200, 86, 61, 94),
                   ),
                 ),
-                
+
                 SizedBox(height: 20),
-                Divider(thickness: 2,),
-                 Text(
+                Divider(
+                  thickness: 2,
+                ),
+                Text(
                   "Bon appétit!",
                   style: TextStyle(
-                    fontSize: 20,
-                    color: Color.fromARGB(200, 86, 61, 94),
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 20,
+                      color: Color.fromARGB(200, 86, 61, 94),
+                      fontWeight: FontWeight.bold),
                 ),
-                Divider(thickness: 2,),
+                Divider(
+                  thickness: 2,
+                ),
                 SizedBox(height: 50),
               ],
             )
