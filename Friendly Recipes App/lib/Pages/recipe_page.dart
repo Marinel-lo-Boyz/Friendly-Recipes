@@ -10,12 +10,25 @@ class RecipePage extends StatefulWidget {
 
 class _RecipePage extends State<RecipePage> {
   bool fav = false;
+  bool weekly = false;
   dynamic _image;
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       _image = image;
+    });
+  }
+
+  Future popUpWeekly() async {
+    setState(() {
+      Column(
+        children: <Widget>[
+          
+
+
+        ],
+      );
     });
   }
 
@@ -68,7 +81,7 @@ class _RecipePage extends State<RecipePage> {
                   children: <Widget>[
                     SizedBox(height: 100),
                     _image == null ? new Text('') : _foodimage(_image, 250),
-                    
+
                     // new Text(Image.file(_image).width.toString(),
                     //     style: TextStyle(fontSize: 90)),
                   ],
@@ -76,44 +89,94 @@ class _RecipePage extends State<RecipePage> {
               ],
             ),
 
-            Column(children: <Widget>[
-              Container(
-                height: 350,
-              ),
-              (fav)
-                  ? Container(
-                      margin: EdgeInsets.only(right: 235),
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.favorite,
-                          color: Colors.red,
-                          size: 30,
+            Row(
+              children: <Widget>[
+                SizedBox(width: 220),
+                //Add weeklyRecipe button
+                Column(children: <Widget>[
+                  Container(
+                    height: 350,
+                  ),
+                  (weekly)
+                      ? Container(
+                          // margin: EdgeInsets.only(right: 235),
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.blue,
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                weekly = !weekly;
+                              });
+                            },
+                          ),
+                        )
+                      : Container(
+                          // margin: EdgeInsets.only(right: 235),
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.person_add,
+                              color: Colors.blueGrey,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                weekly = !weekly;
+                                popUpWeekly();
+                              });
+                            },
+                          ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            fav = !fav;
-                          });
-                        },
-                      ),
-                    )
-                  : Container(
-                      margin: EdgeInsets.only(right: 235),
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.favorite_border,
-                          color: Colors.grey,
-                          size: 30,
+                ]),
+
+                SizedBox(
+                  width: 10,
+                ),
+
+                Column(children: <Widget>[
+                  Container(
+                    height: 350,
+                  ),
+                  (fav)
+                      ? Container(
+                          // margin: EdgeInsets.only(right: 235),
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                fav = !fav;
+                              });
+                            },
+                          ),
+                        )
+                      : Container(
+                          //margin: EdgeInsets.only(right: 235),
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.favorite_border,
+                              color: Colors.grey,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                fav = !fav;
+                              });
+                            },
+                          ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            fav = !fav;
-                          });
-                        },
-                      ),
-                    ),
-            ]),
+                ]),
+              ],
+            ),
             //bottom button
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
