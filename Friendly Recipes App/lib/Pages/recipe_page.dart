@@ -119,7 +119,7 @@ class _RecipePage extends State<RecipePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
-                  height: 740,
+                  height: 708,
                 ),
                 SizedBox(
                   height: 75,
@@ -130,7 +130,7 @@ class _RecipePage extends State<RecipePage> {
                       "Add Picture",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'Berlin Sans',
+                        // fontFamily: 'Berlin Sans',
                         fontSize: 20,
                         color: Colors.white,
                       ),
