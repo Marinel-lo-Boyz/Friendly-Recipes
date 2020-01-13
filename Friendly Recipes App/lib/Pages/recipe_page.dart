@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:friendly_recipes_app/pages/add_recipe_page.dart';
 
 // import 'package:friendly_recipes_app/pages/home_page.dart';
 
@@ -12,6 +13,19 @@ class _RecipePage extends State<RecipePage> {
   bool fav = false;
   bool weekly = false;
   dynamic _image;
+  TextEditingController _typeCtrl, _userCtrl, _timeCtrl;
+  List<Item> _dataType =
+      generateItems(1, "Type", ["Starter", "Main dish", "Dessert"]);
+  List<Item> _dataUsers =
+      generateItems(1, "Users", ["Marc", "Alejandro", "Lluís"]);
+
+  @override
+  void initState() {
+    _typeCtrl = TextEditingController();
+    _userCtrl = TextEditingController();
+    _timeCtrl = TextEditingController();
+    super.initState();
+  }
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -20,16 +34,80 @@ class _RecipePage extends State<RecipePage> {
     });
   }
 
-  Future popUpWeekly() async {
-    setState(() {
-      Column(
-        children: <Widget>[
-          
+  Widget _buildPanel(List<Item> _dataItem, TextEditingController _txtCtrl) {
+    return ExpansionPanelList(
+      expansionCallback: (int index, bool isExpanded) {
+        setState(() {
+          _dataItem[index].isExpanded = !isExpanded;
+        });
+      },
+      children: _dataItem.map<ExpansionPanel>((Item item) {
+        return ExpansionPanel(
+          headerBuilder: (BuildContext context, bool isExpanded) {
+            return ListTile(
+              title: Text(item.headerValue),
+            );
+          },
+          body: Column(
+            children: <Widget>[
+              ListTile(
+                title: Text(item.expandedValue[0]),
+                onTap: () => setState(() {
+                  item.headerValue = item.expandedValue[0];
+                  _txtCtrl.text = item.expandedValue[0];
+                }),
+              ),
+              ListTile(
+                title: Text(item.expandedValue[1]),
+                onTap: () => setState(() {
+                  item.headerValue = item.expandedValue[1];
+                  _txtCtrl.text = item.expandedValue[1];
+                }),
+              ),
+              ListTile(
+                title: Text(item.expandedValue[2]),
+                onTap: () => setState(() {
+                  item.headerValue = item.expandedValue[2];
+                  _txtCtrl.text = item.expandedValue[2];
+                }),
+              ),
+            ],
+          ),
+          isExpanded: item.isExpanded,
+        );
+      }).toList(),
+    );
+  }
 
+  Widget popUpWeekly() {
+    return Column(
+      children: <Widget>[
+        //SizedBox(height: 200,),
+        Padding(padding: EdgeInsets.all(100),),
+        Container(
+          color: Colors.blueGrey,
+          child: Column(children: <Widget>[
+            Text(
+            'Weekly Recipe',
+            style: TextStyle(
+                fontFamily: 'Berlin Sans',
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                color: Colors.black54),
+          ),
+          //SizedBox(height: 200,),
+          _buildPanel(_dataType, _typeCtrl),
+          _buildPanel(_dataUsers, _userCtrl),
+          TextField(
+                controller: _timeCtrl,
+                decoration: InputDecoration(labelText: 'Time (ex: 12:45)'),
+              ),
 
-        ],
-      );
-    });
+          ],),
+        ),
+        
+      ],
+    );
   }
 
   Widget _foodimage(dynamic _image, double _maxheigh) {
@@ -74,6 +152,8 @@ class _RecipePage extends State<RecipePage> {
 
             //text info
             _Info(),
+            //Pop up
+            (weekly) ? popUpWeekly() : Text(''),
             Row(
               children: <Widget>[
                 SizedBox(width: 30),
@@ -126,7 +206,6 @@ class _RecipePage extends State<RecipePage> {
                             onPressed: () {
                               setState(() {
                                 weekly = !weekly;
-                                popUpWeekly();
                               });
                             },
                           ),
@@ -190,7 +269,7 @@ class _RecipePage extends State<RecipePage> {
                     color: Colors.deepOrange[400],
                     shape: StadiumBorder(),
                     label: Text(
-                      "Add Picture",
+                      "Add Photo",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         // fontFamily: 'Berlin Sans',
