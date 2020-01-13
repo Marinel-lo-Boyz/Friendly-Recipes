@@ -19,6 +19,17 @@ class _RecipePage extends State<RecipePage> {
     });
   }
 
+  Widget _foodimage(dynamic _image, double _maxheigh, double _maxwidth) {
+    return Image(
+      //new Image.file(_image),
+      image: FileImage(_image),
+      
+      height: _maxheigh,
+      width: _maxwidth,
+      fit: BoxFit.fill,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,9 +61,26 @@ class _RecipePage extends State<RecipePage> {
 
             //text info
             _Info(),
+            SizedBox(height: 60),
+            Row(
+              children: <Widget>[
+                SizedBox(width: 110),
+                Column(
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.all(30)),
+                    _image == null
+                    ? new Text('')
+                    :  _foodimage(_image, 200, 200),
+                   
+                  ],
+                )
+              ],
+            ),
 
             Column(children: <Widget>[
               Container(
+                // child:
+                // _foodimage(),
                 height: 350,
               ),
               (fav)
@@ -115,7 +143,6 @@ class _RecipePage extends State<RecipePage> {
                     ),
                     onPressed: () {
                       getImage();
-                      
                     },
                   ),
                 ),
