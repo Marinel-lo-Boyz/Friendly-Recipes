@@ -19,13 +19,13 @@ class _RecipePage extends State<RecipePage> {
     });
   }
 
-  Widget _foodimage(dynamic _image, double _maxheigh, double _maxwidth) {
+  Widget _foodimage(dynamic _image, double _maxheigh) {
+    //, double _maxwidth) {
     return Image(
-      //new Image.file(_image),
       image: FileImage(_image),
-      
+
       height: _maxheigh,
-      width: _maxwidth,
+      //width: _maxwidth,
       fit: BoxFit.fill,
     );
   }
@@ -61,17 +61,16 @@ class _RecipePage extends State<RecipePage> {
 
             //text info
             _Info(),
-            SizedBox(height: 60),
             Row(
               children: <Widget>[
-                SizedBox(width: 110),
+                SizedBox(width: 30),
                 Column(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.all(30)),
-                    _image == null
-                    ? new Text('')
-                    :  _foodimage(_image, 200, 200),
-                   
+                    SizedBox(height: 100),
+                    _image == null ? new Text('') : _foodimage(_image, 250),
+                    
+                    // new Text(Image.file(_image).width.toString(),
+                    //     style: TextStyle(fontSize: 90)),
                   ],
                 )
               ],
@@ -79,8 +78,6 @@ class _RecipePage extends State<RecipePage> {
 
             Column(children: <Widget>[
               Container(
-                // child:
-                // _foodimage(),
                 height: 350,
               ),
               (fav)
@@ -122,24 +119,25 @@ class _RecipePage extends State<RecipePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
-                  height: 765,
+                  height: 740,
                 ),
-                Expanded(
+                SizedBox(
+                  height: 75,
                   child: FlatButton.icon(
                     color: Colors.deepOrange[400],
                     shape: StadiumBorder(),
-                    icon: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 35,
-                    ),
                     label: Text(
-                      "Add Photo",
+                      "Add Picture",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: Colors.white,
                       ),
+                    ),
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 35,
                     ),
                     onPressed: () {
                       getImage();
