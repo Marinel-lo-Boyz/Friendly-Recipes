@@ -27,8 +27,6 @@ class _HomePageState extends State<HomePage> {
       body: Padding(
         padding: EdgeInsets.only(
           top: 18,
-          right: 40,
-          left: 40,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -40,14 +38,14 @@ class _HomePageState extends State<HomePage> {
             ),
             buildSearcher(),
             SizedBox(
-              height: 22,
+              height: 20,
             ),
             Expanded(
               child: MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
                 child: ListView(
-                  // physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 35),
                   children: <Widget>[
                     buildWeeklyRecipeSection(),
                     SizedBox(
@@ -58,6 +56,9 @@ class _HomePageState extends State<HomePage> {
                       height: 22,
                     ),
                     buildRecipesList(),
+                    SizedBox(
+                      height: 22,
+                    ),
                   ],
                 ),
               ),
@@ -74,42 +75,43 @@ class _HomePageState extends State<HomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Container(
-          height: 46,
-          width: 300,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 8.0, // has the effect of softening the shadow
-                spreadRadius: 5.0, // has the effect of extending the shadow
-                offset: Offset(-6.0, 6.0),
-              )
-            ],
-          ),
+        Expanded(
           child: Container(
+            height: 46,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.white,
-            ),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(right: 22),
-                ),
-                buildIcon(),
-                Center(
-                  child: Text(
-                    'Friendly Recipes',
-                    style: TextStyle(
-                        fontFamily: 'Berlin Sans',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Colors.black54),
-                  ),
-                ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8.0, // has the effect of softening the shadow
+                  spreadRadius: 5.0, // has the effect of extending the shadow
+                  offset: Offset(-6.0, 6.0),
+                )
               ],
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 22),
+                  ),
+                  buildIcon(),
+                  Center(
+                    child: Text(
+                      'Friendly Recipes',
+                      style: TextStyle(
+                          fontFamily: 'Berlin Sans',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Colors.black54),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -126,26 +128,31 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildSearcher() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            height: 42,
-            decoration: BoxDecoration(
-              color: Colors.grey[350],
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                alignLabelWithHint: true,
-                hintText: 'Search your recipe',
-                prefixIcon: Icon(Icons.search),
-                border: InputBorder.none,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30,
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              height: 42,
+              decoration: BoxDecoration(
+                color: Colors.grey[350],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  alignLabelWithHint: true,
+                  hintText: 'Search your recipe',
+                  prefixIcon: Icon(Icons.search),
+                  border: InputBorder.none,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -153,27 +160,23 @@ class _HomePageState extends State<HomePage> {
     return Row(
       children: <Widget>[
         Expanded(
-          flex:3,
-          child: Center(
-            child: Transform(
-              alignment: FractionalOffset.center,
-              transform: Matrix4.identity()..rotateZ(-90 * 3.1415927 / 180),
-              child: Text(
-                'Weekly Recipe',
-                style:
-                    TextStyle(fontFamily: 'Berlin Sans', color: Colors.blueGrey),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-           flex:9,
           child: Container(
-            child: Center(),
             height: 120,
             decoration: BoxDecoration(
               color: Colors.grey[350],
               borderRadius: BorderRadius.circular(20),
+            ),
+            padding: EdgeInsets.all(5),
+            child: Center(
+              child: Text(
+                'Weekly Recipe',
+                softWrap: false,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'Berlin Sans',
+                  color: Colors.blueGrey,
+                ),
+              ),
             ),
           ),
         ),
@@ -242,29 +245,67 @@ class _HomePageState extends State<HomePage> {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());
         }
-        List<DocumentSnapshot> groups = snapshot.data.documents;
-        return ListView.builder(
+        List<DocumentSnapshot> recipes = snapshot.data.documents;
+        return ListView.separated(
+          separatorBuilder: (context, index) {
+            return SizedBox(
+              height: 30,
+            );
+          },
           padding: EdgeInsets.zero,
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: groups.length,
+          itemCount: recipes.length,
           itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text(
-                  groups[index].data['name'],
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(groups[index].documentID),
-              ),
-            );
+            return buildRecipeTile(recipes[index]);
           },
         );
       },
     );
   }
 
+  Widget buildRecipeTile(DocumentSnapshot recipe) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 20.0, // has the effect of softening the shadow
+              spreadRadius: 4.0, // has the effect of extending the shadow
+              offset: Offset(0, 10.0),
+            )
+          ],
+        ),
+        child: Container(
+          height: 100,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(10)),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // child: Text(
+  //   recipe.data['name'],
+  //   style: TextStyle(fontWeight: FontWeight.bold),
+  // ),
   Widget buildAddRecipeButton() {
     return Container(
       decoration: BoxDecoration(
