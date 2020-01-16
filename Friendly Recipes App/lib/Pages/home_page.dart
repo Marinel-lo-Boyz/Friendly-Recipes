@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:friendly_recipes_app/pages/recipe_page.dart';
+import 'package:friendly_recipes_app/Providers/recipe_filters.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -24,47 +26,49 @@ class _HomePageState extends State<HomePage> {
   Widget buildBase(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: Padding(
-        padding: EdgeInsets.only(
-          top: 18,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            buildTitle(),
-            SizedBox(
-              height: 22,
-            ),
-            buildSearcher(),
-            SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 35),
-                  children: <Widget>[
-                    buildWeeklyRecipeSection(),
-                    SizedBox(
-                      height: 22,
-                    ),
-                    buildFilters(),
-                    SizedBox(
-                      height: 22,
-                    ),
-                    buildRecipesList(),
-                    SizedBox(
-                      height: 22,
-                    ),
-                  ],
+      body: Stack(
+        children: <Widget>[
+          MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView(
+              padding: EdgeInsets.only(right: 35, left: 35, top: 20),
+              children: <Widget>[
+                SizedBox(
+                  height: 130,
                 ),
-              ),
+                buildWeeklyRecipeSection(),
+                SizedBox(
+                  height: 22,
+                ),
+                buildFilters(),
+                SizedBox(
+                  height: 22,
+                ),
+                buildRecipesList(),
+                SizedBox(
+                  height: 100,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 18,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                buildTitle(),
+                SizedBox(
+                  height: 22,
+                ),
+                buildSearcher(searchController),
+              ],
+            ),
+          ),
+        ],
       ),
       floatingActionButton: buildAddRecipeButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -127,7 +131,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildSearcher() {
+  Widget buildSearcher(TextEditingController searchController) {
+    RecipeFilters recipeFilters = Provider.of<RecipeFilters>(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 30,
@@ -142,6 +148,8 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: TextField(
+                onChanged: (text) => recipeFilters.searchText = text,
+                controller: searchController,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,
                   hintText: 'Search your recipe',
@@ -161,20 +169,33 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Expanded(
           child: Container(
-            height: 120,
             decoration: BoxDecoration(
-              color: Colors.grey[350],
               borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 20.0, // has the effect of softening the shadow
+                  spreadRadius: 4.0, // has the effect of extending the shadow
+                  offset: Offset(0, 10.0),
+                )
+              ],
             ),
-            padding: EdgeInsets.all(5),
-            child: Center(
-              child: Text(
-                'Weekly Recipe',
-                softWrap: false,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'Berlin Sans',
-                  color: Colors.blueGrey,
+            child: Container(
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.orange,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: EdgeInsets.all(5),
+              child: Center(
+                child: Text(
+                  'Weekly Recipe',
+                  softWrap: false,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Berlin Sans',
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -204,23 +225,31 @@ class _HomePageState extends State<HomePage> {
           flex: 1,
           child: SizedBox(),
         ),
-        buildFilterButton('Mg', Icons.favorite, Colors.red),
+        buildFilterButton('Fav', Icons.favorite, Colors.red),
       ],
     );
   }
 
   Widget buildFilterButton(String filterName, IconData icon, Color color) {
+    RecipeFilters recipeFilters = Provider.of<RecipeFilters>(context);
+
     return Column(
       children: <Widget>[
         Align(
           child: FloatingActionButton(
-            backgroundColor: Colors.white,
+            backgroundColor: (recipeFilters.filters[filterName] == true
+                ? Colors.orange
+                : Colors.white),
             child: Icon(
               icon,
-              color: color,
+              color: (recipeFilters.filters[filterName] == true
+                  ? Colors.white
+                  : Colors.blueGrey),
               size: 30,
             ),
-            onPressed: () {},
+            onPressed: () {
+              recipeFilters.swapFilter(filterName);
+            },
           ),
         ),
         SizedBox(
@@ -239,6 +268,8 @@ class _HomePageState extends State<HomePage> {
 
   Widget buildRecipesList() {
     final db = Firestore.instance;
+    RecipeFilters recipeFilters = Provider.of<RecipeFilters>(context);
+
     return StreamBuilder<QuerySnapshot>(
       stream: db.collection('recipes').orderBy('name').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -246,6 +277,37 @@ class _HomePageState extends State<HomePage> {
           return Center(child: CircularProgressIndicator());
         }
         List<DocumentSnapshot> recipes = snapshot.data.documents;
+
+        // Aplly filters -----------------------------------
+
+        bool noFilterActive = true;
+
+        recipeFilters.filters.forEach((k, v) {
+          if (v == true) {
+            noFilterActive = false;
+          }
+        });
+
+        if (!noFilterActive) {
+          recipeFilters.filters.forEach((k, v) {
+            if (v == false) {
+              recipes.removeWhere((doc) => doc.data['type'] == k);
+            }
+          });
+        }
+
+        if (recipeFilters.searchText != '') {
+          recipes.removeWhere((doc) {
+            String name = doc.data['name'];
+            String search = recipeFilters.searchText;
+            name = name.toLowerCase();
+            search = search.toLowerCase();
+            return !name.contains(search);
+          });
+        }
+
+        // Build list ----------------------------------------
+
         return ListView.separated(
           separatorBuilder: (context, index) {
             return SizedBox(
@@ -265,39 +327,120 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildRecipeTile(DocumentSnapshot recipe) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 20.0, // has the effect of softening the shadow
-              spreadRadius: 4.0, // has the effect of extending the shadow
-              offset: Offset(0, 10.0),
-            )
-          ],
-        ),
-        child: Container(
-          height: 100,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Center(
-            child: Column(
+    double heightTile = 120;
+    BorderRadius radiusTile = BorderRadius.circular(20);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: radiusTile,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 20.0, // has the effect of softening the shadow
+            spreadRadius: 4.0, // has the effect of extending the shadow
+            offset: Offset(0, 10.0),
+          )
+        ],
+      ),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(10),
+            height: heightTile,
+            decoration: BoxDecoration(
+              borderRadius: radiusTile,
+              color: Colors.white,
+            ),
+            child: Row(
               children: <Widget>[
-                Container(
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(10)),
+                AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(15)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        recipe.data['name'],
+                        style: TextStyle(
+                          fontFamily: 'Berlin Sans',
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      RichText(
+                        textAlign: TextAlign.end,
+                        text: TextSpan(
+                          children: [
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Icon(
+                                Icons.person,
+                                size: 14,
+                                color: Colors.black12,
+                              ),
+                            ),
+                            TextSpan(
+                              style: TextStyle(color: Colors.black12),
+                              text: "  User",
+                            ),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        textAlign: TextAlign.end,
+                        text: TextSpan(
+                          children: [
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Icon(
+                                Icons.cake,
+                                size: 14,
+                                color: Colors.black12,
+                              ),
+                            ),
+                            TextSpan(
+                              style: TextStyle(color: Colors.black12),
+                              text: "  Dessire",
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
           ),
-        ),
+          Material(
+            // InkWell Upside
+            color: Colors.transparent,
+            borderRadius: radiusTile,
+            child: InkWell(
+              borderRadius: radiusTile,
+              onTap: () {},
+              child: Container(
+                height: heightTile,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
