@@ -359,8 +359,15 @@ class _HomePageState extends State<HomePage> {
                     width: 100,
                     height: 100,
                     decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(15)),
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.network(
+                          'https://www.laespanolaaceites.com/wp-content/uploads/2019/06/pizza-con-chorizo-jamon-y-queso-1080x671.jpg',
+                          fit: BoxFit.fitHeight,
+                        )),
                   ),
                 ),
                 Padding(
