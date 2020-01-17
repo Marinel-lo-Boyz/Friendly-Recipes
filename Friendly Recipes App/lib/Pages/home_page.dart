@@ -409,14 +409,17 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => RecipePage(Info(
+                builder: (_) => RecipePage(
+                  Info(
                     recipe.data['name'],
                     recipe.data['type'],
                     recipe.data['user'],
                     recipe.data['time'],
                     recipe.data['ingredients'],
-                    recipe.data[
-                        'elaboration'])), //number that changesnumber that changes
+                    recipe.data['elaboration'],
+                    recipe.documentID,
+                  ),
+                ), //number that changesnumber that changes
               ),
             );
           },

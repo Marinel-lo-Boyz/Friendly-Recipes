@@ -3,13 +3,15 @@ import 'dart:ui';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:friendly_recipes_app/Providers/user_data.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:friendly_recipes_app/pages/add_recipe_page.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 // import 'package:friendly_recipes_app/pages/home_page.dart';
 class Info {
-  String title, type, user, time, ingredients, elaboration;
+  String title, type, user, time, ingredients, elaboration, id;
   Info(
     this.title,
     this.type,
@@ -17,6 +19,7 @@ class Info {
     this.time,
     this.ingredients,
     this.elaboration,
+    this.id,
   );
 }
 
@@ -32,16 +35,16 @@ class _RecipePage extends State<RecipePage> {
   bool fav = false;
   bool weekly = false;
   dynamic _image;
-  TextEditingController _typeCtrl, _userCtrl, _timeCtrl;
+  // TextEditingController _typeCtrl, _userCtrl, _timeCtrl;
+  TextEditingController _typeCtrl, _timeCtrl;
   List<Item> _dataType =
-      generateItems(1, "Type", ["Starter", "Main dish", "Dessert"]);
-  List<Item> _dataUsers =
-      generateItems(1, "Users", ["Marc", "Alejandro", "Lluís"]);
+      generateItems(1, "Type", ["Starter", "Main", "Dessert"]);
+  UserData userData;
 
   @override
   void initState() {
     _typeCtrl = TextEditingController();
-    _userCtrl = TextEditingController();
+    // _userCtrl = TextEditingController();
     _timeCtrl = TextEditingController();
     super.initState();
   }
@@ -112,7 +115,7 @@ class _RecipePage extends State<RecipePage> {
               ),
               //SizedBox(height: 200,),
               _buildPanel(_dataType, _typeCtrl),
-              _buildPanel(_dataUsers, _userCtrl),
+              // _buildPanel(_dataUsers, _userCtrl),
               TextField(
                 controller: _timeCtrl,
                 decoration: InputDecoration(labelText: 'Time (ex: 12:45)'),
@@ -178,6 +181,8 @@ class _RecipePage extends State<RecipePage> {
 
   @override
   Widget build(BuildContext context) {
+    userData = Provider.of<UserData>(context);
+
     return Container(
       //return Provider<Recipe>.value(
       //value: recipe,
@@ -270,7 +275,7 @@ class _RecipePage extends State<RecipePage> {
                                     content: new Column(
                                       children: <Widget>[
                                         _buildPanel(_dataType, _typeCtrl),
-                                        _buildPanel(_dataUsers, _userCtrl),
+                                        // _buildPanel(_dataUsers, _userCtrl),
                                       ],
                                     ),
                                     actions: <Widget>[
@@ -315,41 +320,29 @@ class _RecipePage extends State<RecipePage> {
                   Container(
                     height: 350,
                   ),
-                  (fav)
-                      ? Container(
-                          // margin: EdgeInsets.only(right: 235),
-                          child: FloatingActionButton(
-                            heroTag: 'favorite',
-                            backgroundColor: Colors.red,
-                            child: Icon(
-                              Icons.favorite,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                fav = !fav;
-                              });
-                            },
-                          ),
-                        )
-                      : Container(
-                          //margin: EdgeInsets.only(right: 235),
-                          child: FloatingActionButton(
-                            heroTag: 'favorite_fill',
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.favorite_border,
-                              color: Colors.grey,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                fav = !fav;
-                              });
-                            },
-                          ),
-                        ),
+                  Container(
+                    //margin: EdgeInsets.only(right: 235),
+                    child: FloatingActionButton(
+                      heroTag: 'favorite',
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: (userData.isFavorite(widget.info.id)) ?Colors.red :Colors.blueGrey ,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          if (userData.isFavorite(widget.info.id))
+                          {
+                            userData.removeFavorite(widget.info.id);
+                          }
+                          else{
+                            userData.addFavorite(widget.info.id);
+                          }
+                        });
+                      },
+                    ),
+                  ),
                 ]),
               ],
             ),
