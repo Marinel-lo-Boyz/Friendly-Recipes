@@ -100,7 +100,26 @@ class _AddRecipePageState extends State<AddRecipePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Recipe'),
+        iconTheme: IconThemeData(color: Colors.grey, size: 16.0),
+        title: Row(
+          children: <Widget>[
+            Text(
+              'Add Recipe',
+              style: TextStyle(
+                  fontFamily: 'Berlin Sans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Colors.black54),
+            ),
+            SizedBox(width: 8),
+            Image(
+              image: AssetImage('assets/icon.png'),
+              height: 50,
+              fit: BoxFit.fill,
+            ),
+          ],
+        ),
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -129,27 +148,52 @@ class _AddRecipePageState extends State<AddRecipePage> {
                 maxLines: null,
               ),
               //Spacer(),
-              SizedBox(height: 10),
-              FlatButton(
-                child: Text(
-                  'ADD',
-                  style: TextStyle(
-                    color: Colors.white,
+              SizedBox(height: 30),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(120),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 7.0, // has the effect of softening the shadow
+                      spreadRadius:
+                          1.0, // has the effect of extending the shadow
+                      offset: Offset(-5, 8),
+                    )
+                  ],
+                ),
+                child: SizedBox(
+                  height: 55,
+                  child: FlatButton.icon(
+                    color: Colors.red[200],
+                    shape: StadiumBorder(),
+                    label: Text(
+                      "ADD RECIPE",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Berlin Sans',
+                        fontSize: 28,
+                        color: Colors.blueGrey[600],
+                      ),
+                    ),
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.blueGrey,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop([
+                        _titleCtrl.text,
+                        _typeCtrl.text,
+                        _userCtrl.text,
+                        _timeCtrl.text,
+                        _ingredientsCtrl.text,
+                        _elaborationCtrl.text,
+                      ]);
+                    },
                   ),
                 ),
-                color: Colors.red,
-                shape: StadiumBorder(),
-                onPressed: () {
-                  Navigator.of(context).pop({
-                    'title': _titleCtrl.text,
-                    'type': _typeCtrl.text,
-                    'user': _userCtrl.text,
-                    'time': _timeCtrl.text,
-                    'ingredients': _ingredientsCtrl.text,
-                    'elaboration': _elaborationCtrl.text,
-                  });
-                },
-              )
+              ),
             ],
           ),
         ),
