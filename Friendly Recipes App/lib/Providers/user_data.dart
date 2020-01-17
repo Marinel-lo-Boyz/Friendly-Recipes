@@ -1,30 +1,51 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class UserData with ChangeNotifier {
   DocumentSnapshot document;
-  List<String> favoriteIds = [];
+  List<String> _favoriteIds = [];
   final db = Firestore.instance;
 
   updateList() {
-    favoriteIds.clear();
+    _favoriteIds = List.from(document.data['favorites']);
   }
 
   bool isFavorite(String id) {
-    return favoriteIds.contains(id);
+    return _favoriteIds.contains(id);
+  }
+
+  List<String> getFavList() {
+    List<String> ret = [];
+    if (document != null) {
+      db.collection('users').document(document.documentID).get().then(
+        (doc) {
+          _favoriteIds = List.from(doc.data['favorites']);
+        },
+      );
+      ret = _favoriteIds;
+    }
+
+    return ret;
   }
 
   addFavorite(String id) {
-    favoriteIds.add(id);
-    db.collection('users').document(document.documentID).updateData({
-      'favorites': favoriteIds,
-    });
+    _favoriteIds.add(id);
+
+    if (document != null) {
+      db.collection('users').document(document.documentID).updateData({
+        'favorites': _favoriteIds,
+      });
+    }
   }
 
   removeFavorite(String id) {
-    favoriteIds.remove(id);
-    db.collection('users').document(document.documentID).updateData({
-      'favorites': favoriteIds,
-    });
+    _favoriteIds.remove(id);
+    if (document != null) {
+      db.collection('users').document(document.documentID).updateData({
+        'favorites': _favoriteIds,
+      });
+    }
   }
 }
