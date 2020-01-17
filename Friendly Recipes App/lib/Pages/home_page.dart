@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                                       Icons.cake,
                                     ),
                                      SmallFeatureText(
-                                      recipe.data['type'],
+                                      snapshot_1.data['time'],
                                       Icons.cake,
                                     ),
                                   ],
