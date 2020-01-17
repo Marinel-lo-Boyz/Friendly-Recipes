@@ -145,18 +145,18 @@ class _HomePageState extends State<HomePage> {
 
     return StreamBuilder<DocumentSnapshot>(
         stream: db.collection('info').document('weeklyRecipe').snapshots(),
-        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (!snapshot.hasData) {
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot_1) {
+          if (!snapshot_1.hasData) {
             return Center(child: CircularProgressIndicator());
           } else {
-            String id = snapshot.data['id'];
+            String id = snapshot_1.data['id'];
             return StreamBuilder<DocumentSnapshot>(
                 stream: db.collection('recipes').document(id).snapshots(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (!snapshot.hasData) {
+                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot_2) {
+                  if (!snapshot_2.hasData) {
                     return Center(child: CircularProgressIndicator());
                   }
-                  var docId = db.collection('recipes').document(id).documentID;
+                  DocumentSnapshot recipe = snapshot_2.data;
                   return Row(
                     children: <Widget>[
                       Expanded(
@@ -176,20 +176,20 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Container(
                             height: 120,
-                            child: new Material(
-                              child: new InkWell(
+                            child:  Material(
+                              child:  InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (_) => RecipePage(Info(
-                                          snapshot.data['name'],
-                                          snapshot.data['type'],
-                                          snapshot.data['user'],
-                                          snapshot.data['time'],
-                                          snapshot.data['ingredients'],
-                                          snapshot.data['elaboration'],
-                                          docId,
-                                          snapshot.data['url_image'])),
+                                          recipe.data['name'],
+                                          recipe.data['type'],
+                                          recipe.data['user'],
+                                          recipe.data['time'],
+                                          recipe.data['ingredients'],
+                                          recipe.data['elaboration'],
+                                          recipe.documentID,
+                                          recipe.data['url_image'])),
                                     ),
                                   );
                                 },
@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                                             children: <Widget>[
                                               Text(
                                                 //'name',
-                                                snapshot.data['name'],
+                                                snapshot_2.data['name'],
                                                 style: TextStyle(
                                                   fontFamily: 'Berlin Sans',
                                                   color: Colors.blueGrey,
@@ -457,11 +457,11 @@ class _HomePageState extends State<HomePage> {
                       height: 10,
                     ),
                     SmallFeatureText(
-                      'User',
+                      recipe.data['user'],
                       Icons.person,
                     ),
                     SmallFeatureText(
-                      'Type',
+                      recipe.data['type'],
                       Icons.cake,
                     ),
                   ],
