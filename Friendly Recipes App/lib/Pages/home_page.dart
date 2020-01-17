@@ -387,14 +387,18 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        recipe.data['name'],
-                        style: TextStyle(
-                          fontFamily: 'Berlin Sans',
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            recipe.data['name'],
+                            style: TextStyle(
+                              fontFamily: 'Berlin Sans',
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 10,
@@ -449,6 +453,38 @@ class _HomePageState extends State<HomePage> {
             borderRadius: radiusTile,
             child: InkWell(
               borderRadius: radiusTile,
+               onLongPress: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // return object of type Dialog
+                    return AlertDialog(
+                      title: new Text("Delete recipe"),
+                      content: new Text("Recipe can not be recovered"),
+                      actions: <Widget>[
+                        // usually buttons at the bottom of the dialog
+                        new FlatButton(
+                          child: new Text("Close"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        new FlatButton(
+                          child: new Text("Delete"),
+                          onPressed: () {
+                            final db = Firestore.instance;
+                            db
+                                .collection('recipes')
+                                .document(recipe.documentID)
+                                .delete();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
