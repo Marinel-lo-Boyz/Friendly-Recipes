@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:friendly_recipes_app/Providers/recipe_filters.dart';
+import 'package:friendly_recipes_app/pages/recipe_page.dart';
 import 'package:provider/provider.dart';
 
 import 'add_recipe_page.dart';
@@ -217,9 +218,12 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              buildFilterButton('Starter', Icons.local_dining, Colors.blueGrey, 'Starter'),
-              buildFilterButton('Main', Icons.restaurant, Colors.blueGrey, 'Main'),
-              buildFilterButton('Dessert', Icons.cake, Colors.blueGrey, 'Dessert'),
+              buildFilterButton(
+                  'Starter', Icons.local_dining, Colors.blueGrey, 'Starter'),
+              buildFilterButton(
+                  'Main', Icons.restaurant, Colors.blueGrey, 'Main'),
+              buildFilterButton(
+                  'Dessert', Icons.cake, Colors.blueGrey, 'Dessert'),
             ],
           ),
         ),
@@ -232,7 +236,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildFilterButton(String filterName, IconData icon, Color color, String heroTag) {
+  Widget buildFilterButton(
+      String filterName, IconData icon, Color color, String heroTag) {
     RecipeFilters recipeFilters = Provider.of<RecipeFilters>(context);
 
     return Column(
@@ -445,12 +450,11 @@ class _HomePageState extends State<HomePage> {
             child: InkWell(
               borderRadius: radiusTile,
               onTap: () {
-                 Navigator.of(context)
-                .push(
-              MaterialPageRoute(
-                builder: (_) => AddRecipePage(), //number that changes
-              ),
-            );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => RecipePage(), //number that changes
+                  ),
+                );
               },
               child: Container(
                 height: heightTile,
@@ -498,7 +502,13 @@ class _HomePageState extends State<HomePage> {
             color: Colors.blueGrey,
             size: 50,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => AddRecipePage(), //number that changes
+              ),
+            );
+          },
         ),
       ),
     );

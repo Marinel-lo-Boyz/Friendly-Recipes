@@ -83,29 +83,31 @@ class _RecipePage extends State<RecipePage> {
     return Column(
       children: <Widget>[
         //SizedBox(height: 200,),
-        Padding(padding: EdgeInsets.all(100),),
+        Padding(
+          padding: EdgeInsets.all(100),
+        ),
         Container(
           color: Colors.blueGrey,
-          child: Column(children: <Widget>[
-            Text(
-            'Weekly Recipe',
-            style: TextStyle(
-                fontFamily: 'Berlin Sans',
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-                color: Colors.black54),
-          ),
-          //SizedBox(height: 200,),
-          _buildPanel(_dataType, _typeCtrl),
-          _buildPanel(_dataUsers, _userCtrl),
-          TextField(
+          child: Column(
+            children: <Widget>[
+              Text(
+                'Weekly Recipe',
+                style: TextStyle(
+                    fontFamily: 'Berlin Sans',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    color: Colors.black54),
+              ),
+              //SizedBox(height: 200,),
+              _buildPanel(_dataType, _typeCtrl),
+              _buildPanel(_dataUsers, _userCtrl),
+              TextField(
                 controller: _timeCtrl,
                 decoration: InputDecoration(labelText: 'Time (ex: 12:45)'),
               ),
-
-          ],),
+            ],
+          ),
         ),
-        
       ],
     );
   }
@@ -181,6 +183,7 @@ class _RecipePage extends State<RecipePage> {
                       ? Container(
                           // margin: EdgeInsets.only(right: 235),
                           child: FloatingActionButton(
+                            heroTag: 'weekly',
                             backgroundColor: Colors.blue,
                             child: Icon(
                               Icons.person,
@@ -197,6 +200,7 @@ class _RecipePage extends State<RecipePage> {
                       : Container(
                           // margin: EdgeInsets.only(right: 235),
                           child: FloatingActionButton(
+                            heroTag: 'weekly_fill',
                             backgroundColor: Colors.white,
                             child: Icon(
                               Icons.person_add,
@@ -224,6 +228,7 @@ class _RecipePage extends State<RecipePage> {
                       ? Container(
                           // margin: EdgeInsets.only(right: 235),
                           child: FloatingActionButton(
+                            heroTag: 'favorite',
                             backgroundColor: Colors.white,
                             child: Icon(
                               Icons.favorite,
@@ -240,6 +245,7 @@ class _RecipePage extends State<RecipePage> {
                       : Container(
                           //margin: EdgeInsets.only(right: 235),
                           child: FloatingActionButton(
+                            heroTag: 'favorite_fill',
                             backgroundColor: Colors.white,
                             child: Icon(
                               Icons.favorite_border,
