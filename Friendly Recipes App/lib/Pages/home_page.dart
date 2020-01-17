@@ -138,140 +138,250 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildWeeklyRecipeSection() {
-    // String id = 'initial';
-    // db.collection('info').document('weeklyRecipe').get().then((onValue) {
-    //   id = onValue.data['id'];
-    // });
+    double heightTile = 120;
+    BorderRadius radiusTile = BorderRadius.circular(20);
 
-    return StreamBuilder<DocumentSnapshot>(
-        stream: db.collection('info').document('weeklyRecipe').snapshots(),
-        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot_1) {
-          if (!snapshot_1.hasData) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            String id = snapshot_1.data['id'];
-            return StreamBuilder<DocumentSnapshot>(
-                stream: db.collection('recipes').document(id).snapshots(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot_2) {
-                  if (!snapshot_2.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  DocumentSnapshot recipe = snapshot_2.data;
-                  return Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius:
-                                    18.0, // has the effect of softening the shadow
-                                spreadRadius:
-                                    3.0, // has the effect of extending the shadow
-                                offset: Offset(0, 10.0),
+    return ShadedContainer(
+      borderRadius: radiusTile,
+      child: SizedBox(
+          height: heightTile,
+          child: StreamBuilder<DocumentSnapshot>(
+              stream:
+                  db.collection('info').document('weeklyRecipe').snapshots(),
+              builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot_1) {
+                if (!snapshot_1.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  String id = snapshot_1.data['id'];
+                  return StreamBuilder<DocumentSnapshot>(
+                      stream: db.collection('recipes').document(id).snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot_2) {
+                        if (!snapshot_2.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        DocumentSnapshot recipe = snapshot_2.data;
+                        return FlatButton(
+                          color: Colors.white,
+                          padding: EdgeInsets.all(10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              AspectRatio(
+                                aspectRatio: 1,
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.network(
+                                        (recipe.data['url_image'] != null)
+                                            ? recipe.data['url_image']
+                                            : 'https://media-cdn.tripadvisor.com/media/photo-s/18/1a/d5/1e/casteloes.jpg',
+                                        fit: BoxFit.cover,
+                                      )),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 10,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          recipe.data['name'],
+                                          style: TextStyle(
+                                            fontFamily: 'Berlin Sans',
+                                            color: Colors.blueGrey,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    SmallFeatureText(
+                                      recipe.data['user'],
+                                      Icons.person,
+                                    ),
+                                    SmallFeatureText(
+                                      recipe.data['type'],
+                                      Icons.cake,
+                                    ),
+                                     SmallFeatureText(
+                                      recipe.data['type'],
+                                      Icons.cake,
+                                    ),
+                                  ],
+                                ),
                               )
                             ],
                           ),
-                          child: Container(
-                            height: 120,
-                            child:  Material(
-                              child:  InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) => RecipePage(Info(
-                                          recipe.data['name'],
-                                          recipe.data['type'],
-                                          recipe.data['user'],
-                                          recipe.data['time'],
-                                          recipe.data['ingredients'],
-                                          recipe.data['elaboration'],
-                                          recipe.documentID,
-                                          recipe.data['url_image'])),
-                                    ),
-                                  );
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    AspectRatio(
-                                      aspectRatio: 1,
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          color: Colors.orange,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            child: Image.network(
-                                              'https://www.laespanolaaceites.com/wp-content/uploads/2019/06/pizza-con-chorizo-jamon-y-queso-1080x671.jpg',
-                                              fit: BoxFit.fitHeight,
-                                            )),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 10,
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Row(
-                                            children: <Widget>[
-                                              Text(
-                                                //'name',
-                                                snapshot_2.data['name'],
-                                                style: TextStyle(
-                                                  fontFamily: 'Berlin Sans',
-                                                  color: Colors.blueGrey,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          SmallFeatureText(
-                                            'User',
-                                            Icons.person,
-                                          ),
-                                          SmallFeatureText(
-                                            'Type',
-                                            Icons.cake,
-                                          ),
-                                          SmallFeatureText(
-                                            'Time',
-                                            Icons.calendar_today,
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => RecipePage(Info(
+                                    recipe.data['name'],
+                                    recipe.data['type'],
+                                    recipe.data['user'],
+                                    recipe.data['time'],
+                                    recipe.data['ingredients'],
+                                    recipe.data['elaboration'],
+                                    recipe.documentID,
+                                    recipe.data['url_image'])),
                               ),
-                              color: Colors.transparent,
-                            ),
-                            color: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                });
-          }
-        });
+                            ); //number that changesnumber that changes
+                          },
+                        );
+                      });
+                }
+              })),
+    );
   }
+
+  // Widget buildWeeklyRecipeSection() {
+  //   return StreamBuilder<DocumentSnapshot>(
+  //       stream: db.collection('info').document('weeklyRecipe').snapshots(),
+  //       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot_1) {
+  //         if (!snapshot_1.hasData) {
+  //           return Center(child: CircularProgressIndicator());
+  //         } else {
+  //           String id = snapshot_1.data['id'];
+  //           return StreamBuilder<DocumentSnapshot>(
+  //               stream: db.collection('recipes').document(id).snapshots(),
+  //               builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot_2) {
+  //                 if (!snapshot_2.hasData) {
+  //                   return Center(child: CircularProgressIndicator());
+  //                 }
+  //                 DocumentSnapshot recipe = snapshot_2.data;
+  //                 return Row(
+  //                   children: <Widget>[
+  //                     Expanded(
+  //                       child: Container(
+  //                         decoration: BoxDecoration(
+  //                           borderRadius: BorderRadius.circular(20),
+  //                           boxShadow: [
+  //                             BoxShadow(
+  //                               color: Colors.black12,
+  //                               blurRadius:
+  //                                   18.0, // has the effect of softening the shadow
+  //                               spreadRadius:
+  //                                   3.0, // has the effect of extending the shadow
+  //                               offset: Offset(0, 10.0),
+  //                             )
+  //                           ],
+  //                         ),
+  //                         child: Container(
+  //                           height: 120,
+  //                           child: Material(
+  //                             child: InkWell(
+  //                               onTap: () {
+  //                                 Navigator.of(context).push(
+  //                                   MaterialPageRoute(
+  //                                     builder: (_) => RecipePage(Info(
+  //                                         recipe.data['name'],
+  //                                         recipe.data['type'],
+  //                                         recipe.data['user'],
+  //                                         recipe.data['time'],
+  //                                         recipe.data['ingredients'],
+  //                                         recipe.data['elaboration'],
+  //                                         recipe.documentID,
+  //                                         recipe.data['url_image'])),
+  //                                   ),
+  //                                 );
+  //                               },
+  //                               child: Row(
+  //                                 children: <Widget>[
+  //                                   AspectRatio(
+  //                                     aspectRatio: 1,
+  //                                     child: Container(
+  //                                       width: 100,
+  //                                       height: 100,
+  //                                       decoration: BoxDecoration(
+  //                                         color: Colors.orange,
+  //                                         borderRadius:
+  //                                             BorderRadius.circular(15),
+  //                                       ),
+  //                                       child: ClipRRect(
+  //                                           borderRadius:
+  //                                               BorderRadius.circular(15),
+  //                                           child: Image.network(
+  //                                             'https://www.laespanolaaceites.com/wp-content/uploads/2019/06/pizza-con-chorizo-jamon-y-queso-1080x671.jpg',
+  //                                             fit: BoxFit.fitHeight,
+  //                                           )),
+  //                                     ),
+  //                                   ),
+  //                                   Padding(
+  //                                     padding: const EdgeInsets.symmetric(
+  //                                       horizontal: 15,
+  //                                       vertical: 10,
+  //                                     ),
+  //                                     child: Column(
+  //                                       mainAxisAlignment:
+  //                                           MainAxisAlignment.start,
+  //                                       crossAxisAlignment:
+  //                                           CrossAxisAlignment.start,
+  //                                       children: <Widget>[
+  //                                         Row(
+  //                                           children: <Widget>[
+  //                                             Text(
+  //                                               //'name',
+  //                                               snapshot_2.data['name'],
+  //                                               style: TextStyle(
+  //                                                 fontFamily: 'Berlin Sans',
+  //                                                 color: Colors.blueGrey,
+  //                                                 fontWeight: FontWeight.bold,
+  //                                                 fontSize: 18,
+  //                                               ),
+  //                                             ),
+  //                                           ],
+  //                                         ),
+  //                                         SizedBox(
+  //                                           height: 10,
+  //                                         ),
+  //                                         SmallFeatureText(
+  //                                           'User',
+  //                                           Icons.person,
+  //                                         ),
+  //                                         SmallFeatureText(
+  //                                           'Type',
+  //                                           Icons.cake,
+  //                                         ),
+  //                                         SmallFeatureText(
+  //                                           'Time',
+  //                                           Icons.calendar_today,
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   )
+  //                                 ],
+  //                               ),
+  //                             ),
+  //                             color: Colors.transparent,
+  //                           ),
+  //                           color: Colors.orange,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 );
+  //               });
+  //         }
+  //       });
+  // }
 
   Widget buildFilters() {
     return Row(
@@ -426,7 +536,9 @@ class _HomePageState extends State<HomePage> {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
-                        (recipe.data['url_image']!= null) ? recipe.data['url_image'] : 'https://media-cdn.tripadvisor.com/media/photo-s/18/1a/d5/1e/casteloes.jpg',
+                        (recipe.data['url_image'] != null)
+                            ? recipe.data['url_image']
+                            : 'https://media-cdn.tripadvisor.com/media/photo-s/18/1a/d5/1e/casteloes.jpg',
                         fit: BoxFit.cover,
                       )),
                 ),
