@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:friendly_recipes_app/Providers/recipe_filters.dart';
 import 'package:provider/provider.dart';
 
+import 'add_recipe_page.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -215,9 +217,9 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              buildFilterButton('Starter', Icons.local_dining, Colors.blueGrey),
-              buildFilterButton('Main', Icons.restaurant, Colors.blueGrey),
-              buildFilterButton('Dessert', Icons.cake, Colors.blueGrey),
+              buildFilterButton('Starter', Icons.local_dining, Colors.blueGrey, 'Starter'),
+              buildFilterButton('Main', Icons.restaurant, Colors.blueGrey, 'Main'),
+              buildFilterButton('Dessert', Icons.cake, Colors.blueGrey, 'Dessert'),
             ],
           ),
         ),
@@ -225,18 +227,19 @@ class _HomePageState extends State<HomePage> {
           flex: 1,
           child: SizedBox(),
         ),
-        buildFilterButton('Fav', Icons.favorite, Colors.red),
+        buildFilterButton('Fav', Icons.favorite, Colors.red, 'Fav'),
       ],
     );
   }
 
-  Widget buildFilterButton(String filterName, IconData icon, Color color) {
+  Widget buildFilterButton(String filterName, IconData icon, Color color, String heroTag) {
     RecipeFilters recipeFilters = Provider.of<RecipeFilters>(context);
 
     return Column(
       children: <Widget>[
         Align(
           child: FloatingActionButton(
+            heroTag: heroTag,
             backgroundColor: (recipeFilters.filters[filterName] == true
                 ? Colors.orange
                 : Colors.white),
@@ -441,7 +444,14 @@ class _HomePageState extends State<HomePage> {
             borderRadius: radiusTile,
             child: InkWell(
               borderRadius: radiusTile,
-              onTap: () {},
+              onTap: () {
+                 Navigator.of(context)
+                .push(
+              MaterialPageRoute(
+                builder: (_) => AddRecipePage(), //number that changes
+              ),
+            );
+              },
               child: Container(
                 height: heightTile,
               ),
