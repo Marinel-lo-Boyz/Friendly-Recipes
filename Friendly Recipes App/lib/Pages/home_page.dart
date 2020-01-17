@@ -454,7 +454,7 @@ class _HomePageState extends State<HomePage> {
             borderRadius: radiusTile,
             child: InkWell(
               borderRadius: radiusTile,
-               onLongPress: () {
+              onLongPress: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -503,10 +503,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // child: Text(
-  //   recipe.data['name'],
-  //   style: TextStyle(fontWeight: FontWeight.bold),
-  // ),
   Widget buildAddRecipeButton() {
     return Container(
       decoration: BoxDecoration(
@@ -514,9 +510,9 @@ class _HomePageState extends State<HomePage> {
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
-            blurRadius: 7.0, // has the effect of softening the shadow
-            spreadRadius: 2.0, // has the effect of extending the shadow
-            offset: Offset(-5, 8),
+            blurRadius: 10.0, // has the effect of softening the shadow
+            spreadRadius: 4.0, // has the effect of extending the shadow
+            offset: Offset(0, 8),
           )
         ],
       ),
@@ -543,16 +539,8 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => AddRecipePage(), //number that changes
-              )).then((recipeInfo) {
-                  db.collection('recipes').document().setData({
-                      'name': recipeInfo[0],
-                      'type': recipeInfo[1],
-                      'user': recipeInfo[2],
-                      'time': recipeInfo[3],
-                      'ingredients': recipeInfo[4],
-                      'elaboration': recipeInfo[5],
-                  });
-              });
+              ),
+            );
           },
         ),
       ),
