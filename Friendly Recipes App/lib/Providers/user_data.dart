@@ -34,18 +34,18 @@ class UserData with ChangeNotifier {
     _favoriteIds.add(id);
 
     if (document != null) {
-      db.collection('users').document(document.documentID).updateData({
+      db.collection('users').document(document.documentID).setData({
         'favorites': _favoriteIds,
-      });
+      }, merge:  true);
     }
   }
 
   removeFavorite(String id) {
     _favoriteIds.remove(id);
     if (document != null) {
-      db.collection('users').document(document.documentID).updateData({
+      db.collection('users').document(document.documentID).setData({
         'favorites': _favoriteIds,
-      });
+      },merge:  true);
     }
   }
 }
