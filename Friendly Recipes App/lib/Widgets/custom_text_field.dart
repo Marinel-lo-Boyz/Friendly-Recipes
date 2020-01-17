@@ -5,8 +5,8 @@ class CustomTextField extends StatelessWidget {
   final String myText;
   final IconData myIcon;
   final Function myOnChanged;
-
-  CustomTextField( this.myText, this.myIcon, this.myOnChanged);
+  final TextEditingController myController;
+  CustomTextField(this.myText, this.myIcon, this.myOnChanged, {this.myController});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +36,7 @@ class CustomTextField extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: TextField(
+                  controller: myController,
                   style: TextStyle(color: Colors.white),
                   onChanged: myOnChanged,
                   decoration: InputDecoration(
