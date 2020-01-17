@@ -115,7 +115,7 @@ class _UserPageState extends State<UserPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          ShadedFlatButton('Sing In', () => singIn()),
+                          ShadedFlatButton('Sign In', () => signIn()),
                           SizedBox(width: 22),
                           ShadedFlatButton('Log In', () => logIn()),
                         ],
@@ -129,7 +129,7 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  singIn() {
+  signIn() {
 
     if (userStr == '' || passwordStr == '') {
       setState(() {
