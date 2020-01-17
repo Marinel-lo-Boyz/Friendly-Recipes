@@ -46,8 +46,6 @@ class _RecipePage extends State<RecipePage> {
     super.initState();
   }
 
- 
-
   Widget _buildPanel(List<Item> _dataItem, TextEditingController _txtCtrl) {
     return ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
@@ -125,13 +123,15 @@ class _RecipePage extends State<RecipePage> {
       ],
     );
   }
- Future getImage() async {
+
+  Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       _image = image;
     });
     _uploadImageFirebase(image);
   }
+
   Future _uploadImageFirebase(dynamic _image) async {
     if (_image != null) {
       var imageName = Uuid().v1();
@@ -156,23 +156,23 @@ class _RecipePage extends State<RecipePage> {
 
   Widget _foodimage(dynamic _image) {
     return Container(
-        child: Row(
-          children: <Widget>[
-            
-            Padding(padding: EdgeInsets.only(left: 12),),
-            ClipOval(
-              child: SizedBox(
-                height: 300,
-                width: 300,
-                child: Image(
-                  image: FileImage(_image),
-                  fit: BoxFit.fill,
-                ),
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 12),
+          ),
+          ClipOval(
+            child: SizedBox(
+              height: 300,
+              width: 300,
+              child: Image(
+                image: FileImage(_image),
+                fit: BoxFit.fill,
               ),
             ),
-          ],
-        ),
-    
+          ),
+        ],
+      ),
     );
   }
 
