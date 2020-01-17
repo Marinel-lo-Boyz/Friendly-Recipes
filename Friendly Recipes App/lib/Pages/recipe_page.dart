@@ -1,7 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'dart:ui';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:friendly_recipes_app/pages/add_recipe_page.dart';
+import 'package:uuid/uuid.dart';
 
 // import 'package:friendly_recipes_app/pages/home_page.dart';
 class Info {
@@ -42,12 +46,7 @@ class _RecipePage extends State<RecipePage> {
     super.initState();
   }
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    setState(() {
-      _image = image;
-    });
-  }
+ 
 
   Widget _buildPanel(List<Item> _dataItem, TextEditingController _txtCtrl) {
     return ExpansionPanelList(
@@ -126,15 +125,54 @@ class _RecipePage extends State<RecipePage> {
       ],
     );
   }
+ Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = image;
+    });
+    _uploadImageFirebase(image);
+  }
+  Future _uploadImageFirebase(dynamic _image) async {
+    if (_image != null) {
+      var imageName = Uuid().v1();
+      var imagePath = "/recipes/$_image.jpg";
+      final StorageReference storageReference =
+          FirebaseStorage().ref().child(imagePath);
+      final StorageUploadTask uploadTask = storageReference.putFile(_image);
+      final StreamSubscription<StorageTaskEvent> streamSubscription =
+          uploadTask.events.listen((event) {
+        // You can use this to notify yourself or your user in any kind of way.
+        // For example: you could use the uploadTask.events stream in a StreamBuilder instead
+        // to show your user what the current status is. In that case, you would not need to cancel any
+        // subscription as StreamBuilder handles this automatically.
 
-  Widget _foodimage(dynamic _image, double _maxheigh) {
-    //, double _maxwidth) {
-    return Image(
-      image: FileImage(_image),
+        // Here, every StorageTaskEvent concerning the upload is printed to the logs.
+        print('EVENT ${event.type}');
+      });
+      await uploadTask.onComplete;
+      streamSubscription.cancel();
+    }
+  }
 
-      height: _maxheigh,
-      //width: _maxwidth,
-      fit: BoxFit.fill,
+  Widget _foodimage(dynamic _image) {
+    return Container(
+        child: Row(
+          children: <Widget>[
+            
+            Padding(padding: EdgeInsets.only(left: 12),),
+            ClipOval(
+              child: SizedBox(
+                height: 300,
+                width: 300,
+                child: Image(
+                  image: FileImage(_image),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+          ],
+        ),
+    
     );
   }
 
@@ -171,15 +209,13 @@ class _RecipePage extends State<RecipePage> {
             _Info(
               info: widget.info,
             ),
-            //Pop up
-            //(weekly) ? popUpWeekly() : Text(''),
             Row(
               children: <Widget>[
                 SizedBox(width: 30),
                 Column(
                   children: <Widget>[
-                    SizedBox(height: 100),
-                    _image == null ? new Text('') : _foodimage(_image, 250),
+                    SizedBox(height: 35),
+                    _image == null ? Text('') : _foodimage(_image),
 
                     // new Text(Image.file(_image).width.toString(),
                     //     style: TextStyle(fontSize: 90)),
