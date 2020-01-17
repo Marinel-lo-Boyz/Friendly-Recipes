@@ -149,18 +149,14 @@ class _HomePageState extends State<HomePage> {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           } else {
-            DocumentSnapshot doc;
             String id = snapshot.data['id'];
-            db.collection('recipes').document(id).get().then((docSnap) {
-              doc = docSnap;
-            });
             return StreamBuilder<DocumentSnapshot>(
                 stream: db.collection('recipes').document(id).snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   if (!snapshot.hasData) {
                     return Center(child: CircularProgressIndicator());
                   }
-
+                  var docId = db.collection('recipes').document(id).documentID;
                   return Row(
                     children: <Widget>[
                       Expanded(
@@ -183,18 +179,19 @@ class _HomePageState extends State<HomePage> {
                             child: new Material(
                               child: new InkWell(
                                 onTap: () {
-                                  // Navigator.of(context).push(
-                                  //   MaterialPageRoute(
-                                  //     builder: (_) => RecipePage(Info(
-                                  //         doc.data['name'],
-                                  //         doc.data['type'],
-                                  //         doc.data['user'],
-                                  //         doc.data['time'],
-                                  //         doc.data['ingredients'],
-                                  //         doc.data[
-                                  //             'elaboration'])), //number that changesnumber that changes
-                                  //   ),
-                                  // );
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => RecipePage(Info(
+                                          snapshot.data['name'],
+                                          snapshot.data['type'],
+                                          snapshot.data['user'],
+                                          snapshot.data['time'],
+                                          snapshot.data['ingredients'],
+                                          snapshot.data['elaboration'],
+                                          docId,
+                                          snapshot.data['url_image'])),
+                                    ),
+                                  );
                                 },
                                 child: Row(
                                   children: <Widget>[
@@ -252,6 +249,10 @@ class _HomePageState extends State<HomePage> {
                                           SmallFeatureText(
                                             'Type',
                                             Icons.cake,
+                                          ),
+                                          SmallFeatureText(
+                                            'Time',
+                                            Icons.calendar_today,
                                           ),
                                         ],
                                       ),
