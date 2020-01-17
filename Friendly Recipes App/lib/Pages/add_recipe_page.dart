@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:friendly_recipes_app/Widgets/shaded_flat_button.dart';
 
 class Item {
   Item({
@@ -119,7 +120,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
           SizedBox(height: 4),
           buildCustomTextField('Elaboration', _elaborationCtrl),
           SizedBox(height: 40),
-          buildPublishButton(() {
+          ShadedFlatButton( 'Publish',() {
             final db = Firestore.instance;
             db.collection('recipes').document().setData({
               'name': _nameCtrl.text,
@@ -239,38 +240,4 @@ class _AddRecipePageState extends State<AddRecipePage> {
     );
   }
 
-  Widget buildPublishButton(Function onPress) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10.0, // has the effect of softening the shadow
-            spreadRadius: 4.0, // has the effect of extending the shadow
-            offset: Offset(0, 8),
-          )
-        ],
-      ),
-      child: SizedBox(
-        height: 65,
-        child: FlatButton(
-          color: Colors.white,
-          shape: StadiumBorder(),
-          child: Center(
-            child: Text(
-              "Publish",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Berlin Sans',
-                fontSize: 28,
-                color: Colors.blueGrey,
-              ),
-            ),
-          ),
-          onPressed: onPress,
-        ),
-      ),
-    );
-  }
 }
