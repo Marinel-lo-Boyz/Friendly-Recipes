@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:friendly_recipes_app/Pages/home_page.dart';
 import 'package:friendly_recipes_app/Providers/recipe_filters.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +25,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.teal,
         ),
-        // home: UserPage(),
         home: UserPage(),
       ),
     );
