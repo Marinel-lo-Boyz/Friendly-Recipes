@@ -3,6 +3,8 @@ import 'package:friendly_recipes_app/Pages/home_page.dart';
 import 'package:friendly_recipes_app/Providers/recipe_filters.dart';
 import 'package:provider/provider.dart';
 
+import 'Pages/user_page.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.teal,
         ),
-        home: HomePage(),
+        home: UserPage(),
       ),
       
     );

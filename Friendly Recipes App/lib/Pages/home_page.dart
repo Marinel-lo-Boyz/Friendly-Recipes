@@ -71,8 +71,8 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 22,
                 ),
-                CustomTextField(
-                    Icons.search, (text) => recipeFilters.searchText = text),
+                CustomTextField('Serach your recipe', Icons.search,
+                    (text) => recipeFilters.searchText = text),
               ],
             ),
           ),
@@ -299,7 +299,7 @@ class _HomePageState extends State<HomePage> {
     return ShadedContainer(
       borderRadius: radiusTile,
       child: SizedBox(
-        height:heightTile ,
+        height: heightTile,
         child: FlatButton(
           color: Colors.white,
           padding: EdgeInsets.all(10),
@@ -364,44 +364,44 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           onLongPress: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    // return object of type Dialog
-                    return AlertDialog(
-                      title: new Text("Delete recipe"),
-                      content: new Text("Recipe can not be recovered"),
-                      actions: <Widget>[
-                        // usually buttons at the bottom of the dialog
-                        new FlatButton(
-                          child: new Text("Close"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        new FlatButton(
-                          child: new Text("Delete"),
-                          onPressed: () {
-                            final db = Firestore.instance;
-                            db
-                                .collection('recipes')
-                                .document(recipe.documentID)
-                                .delete();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                // return object of type Dialog
+                return AlertDialog(
+                  title: new Text("Delete recipe"),
+                  content: new Text("Recipe can not be recovered"),
+                  actions: <Widget>[
+                    // usually buttons at the bottom of the dialog
+                    new FlatButton(
+                      child: new Text("Close"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    new FlatButton(
+                      child: new Text("Delete"),
+                      onPressed: () {
+                        final db = Firestore.instance;
+                        db
+                            .collection('recipes')
+                            .document(recipe.documentID)
+                            .delete();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 );
               },
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => RecipePage(), //number that changes
-                  ),
-                );
-              },
+            );
+          },
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => RecipePage(), //number that changes
+              ),
+            );
+          },
         ),
       ),
     );

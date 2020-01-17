@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-
+  final String myText;
   final IconData myIcon;
   final Function myOnChanged;
 
-  CustomTextField([this.myIcon, this.myOnChanged]);
+  CustomTextField( this.myText, this.myIcon, this.myOnChanged);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class CustomTextField extends StatelessWidget {
                   onChanged: myOnChanged,
                   decoration: InputDecoration(
                     alignLabelWithHint: true,
-                    hintText: 'Search your recipe',
+                    hintText: myText,
                     hintStyle: TextStyle(color: Colors.white70),
                     prefixIcon: Icon(myIcon, color: Colors.white),
                     border: InputBorder.none,
