@@ -396,9 +396,15 @@ class _HomePageState extends State<HomePage> {
             );
           },
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => RecipePage(), //number that changes
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => RecipePage(Info(
+                        recipe.data['name'],
+                        recipe.data['type'],
+                        recipe.data['user'],
+                        recipe.data['time'],
+                        recipe.data['ingredients'],
+                        recipe.data['elaboration'])), //number that changesnumber that changes
               ),
             );
           },

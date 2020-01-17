@@ -1,10 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:friendly_recipes_app/pages/add_recipe_page.dart';
 
 // import 'package:friendly_recipes_app/pages/home_page.dart';
+class Info {
+  String title, type, user, time, ingredients, elaboration;
+  Info(
+    this.title,
+    this.type,
+    this.user,
+    this.time,
+    this.ingredients,
+    this.elaboration,
+  );
+}
 
 class RecipePage extends StatefulWidget {
+  //String _title;
+  final Info info;
+  RecipePage(this.info);
   @override
   _RecipePage createState() => _RecipePage();
 }
@@ -153,9 +168,11 @@ class _RecipePage extends State<RecipePage> {
             ),
 
             //text info
-            _Info(),
+            _Info(
+              info: widget.info,
+            ),
             //Pop up
-            (weekly) ? popUpWeekly() : Text(''),
+            //(weekly) ? popUpWeekly() : Text(''),
             Row(
               children: <Widget>[
                 SizedBox(width: 30),
@@ -208,6 +225,44 @@ class _RecipePage extends State<RecipePage> {
                               size: 30,
                             ),
                             onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    title: new Text("Weekly recipe"),
+                                    content: new Column(
+                                      children: <Widget>[
+                                        _buildPanel(_dataType, _typeCtrl),
+                                        _buildPanel(_dataUsers, _userCtrl),
+                                      ],
+                                    ),
+                                    actions: <Widget>[
+                                      // usually buttons at the bottom of the dialog
+                                      new FlatButton(
+                                        child: new Text("Close"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            weekly = !weekly;
+                                          });
+                                        },
+                                      ),
+                                      new FlatButton(
+                                        child: new Text("Accept"),
+                                        onPressed: () {
+                                          // final db = Firestore.instance;
+                                          // db
+                                          //     .collection('recipes')
+                                          //     .document(recipe.documentID)
+                                          //     .delete();
+                                          // Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                               setState(() {
                                 weekly = !weekly;
                               });
@@ -229,10 +284,10 @@ class _RecipePage extends State<RecipePage> {
                           // margin: EdgeInsets.only(right: 235),
                           child: FloatingActionButton(
                             heroTag: 'favorite',
-                            backgroundColor: Colors.white,
+                            backgroundColor: Colors.red,
                             child: Icon(
                               Icons.favorite,
-                              color: Colors.red,
+                              color: Colors.white,
                               size: 30,
                             ),
                             onPressed: () {
@@ -304,15 +359,24 @@ class _RecipePage extends State<RecipePage> {
 
 class _Info extends StatefulWidget {
   const _Info({
+    //String title,
     Key key,
-    //@required this.recipe,
+    @required this.info,
   }) : super(key: key);
+
+  final Info info;
 
   @override
   __InfoState createState() => __InfoState();
 }
 
 class __InfoState extends State<_Info> {
+  __InfoState({
+    String name,
+  });
+  //final db = Firestore.instance;
+  //var document = Firestore.instance.collection('recipes').document('test');
+
   Widget _text(String text) {
     final TextStyle infoStyle = TextStyle(
       fontSize: 17,
@@ -338,6 +402,18 @@ class __InfoState extends State<_Info> {
   @override
   Widget build(BuildContext context) {
     //final _recipe = Provider.of<Recipe>(context);
+    //dynamic title; //, type, user, ingredients, elaboration;
+
+    // @override
+    // void initState() {
+    //   title = 'a';
+    //   // type = 'a';
+    //   // user = 'a';
+    //   // ingredients = 'a';
+    //   // elaboration = 'a';
+    //   super.initState();
+    // }
+
     return Container(
       margin: EdgeInsets.only(top: 385, bottom: 35),
       padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
@@ -349,29 +425,64 @@ class __InfoState extends State<_Info> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            // StreamBuilder(
+            //   stream: Firestore.instance.collection('recipes').snapshots(),
+            //   builder: (context, snapshot) {
+            //     setState(() {
+            //       title = snapshot.data.documents[0]['name'];
+            //     });
+            //     if (!snapshot.hasData)
+            //       return Text('Loading data...Please wait');
+
+            //     return Column(
+            //       children: <Widget>[
+            //         Text(snapshot.data.documents[0]['name']),
+            //         Text(snapshot.data.documents[0]['type']),
+            //       ],
+            //     );
+            //   },
+            // ),
             Padding(
               padding: EdgeInsets.only(top: 30),
             ),
-            Text(
-              "Pizza de hojaldre", //recipe.title,
-              style: TextStyle(
-                fontFamily: 'Bodoni',
-                fontWeight: FontWeight.w700,
-                fontSize: 42,
-                color: Color.fromARGB(255, 60, 22, 48),
-              ),
-            ),
+            (widget.info.title != null)
+                ? Text(
+                    widget.info.title,
+                    style: TextStyle(
+                      fontFamily: 'Bodoni',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 42,
+                      color: Color.fromARGB(255, 60, 22, 48),
+                    ),
+                  )
+                : Text(
+                    "There is no title",
+                    style: TextStyle(
+                      fontFamily: 'Bodoni',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 42,
+                      color: Color.fromARGB(255, 60, 22, 48),
+                    ),
+                  ),
             SizedBox(height: 12),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 15),
-                _iconText(Icons.person, "Alejandro"), //recipe.user),
+                (widget.info.user != null)
+                    ? _iconText(Icons.person, widget.info.user)
+                    : _iconText(
+                        Icons.person, 'There is no user'), //recipe.user),
                 SizedBox(height: 20),
-                _iconText(Icons.local_dining, "Starter"), //recipe.location),
+                (widget.info.type != null)
+                    ? _iconText(Icons.local_dining, widget.info.type)
+                    : _iconText(Icons.local_dining,
+                        'There is no type'), //recipe.location),
                 SizedBox(height: 20),
-                _iconText(Icons.calendar_today,
-                    "15:00, el 26 Enero 2020"), //recipe.date),
+                (widget.info.time != null)
+                    ? _iconText(Icons.calendar_today, widget.info.time)
+                    : _iconText(Icons.calendar_today,
+                        'There is no time'), //recipe.date),
                 SizedBox(height: 35),
 
                 Text(
@@ -382,13 +493,21 @@ class __InfoState extends State<_Info> {
                       fontWeight: FontWeight.bold),
                 ),
                 Divider(thickness: 1),
-                Text(
-                  "Amor, Cosas bonitas, Azucar, Ingrediente secreto", //recipe.description,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color.fromARGB(200, 86, 61, 94),
-                  ),
-                ),
+                (widget.info.ingredients != null)
+                    ? Text(
+                        widget.info.ingredients, //recipe.description,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(200, 86, 61, 94),
+                        ),
+                      )
+                    : Text(
+                        "There is no ingredients", //recipe.description,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(200, 86, 61, 94),
+                        ),
+                      ),
                 SizedBox(height: 20),
                 Text(
                   "Elaboration",
@@ -398,13 +517,21 @@ class __InfoState extends State<_Info> {
                       fontWeight: FontWeight.bold),
                 ),
                 Divider(thickness: 1),
-                Text(
-                  "Pillas la masa del merca, xd, y despues te la llevas pa tu kelly pa ponerle el tomatico el quesillo y las vaynas que quieras meterle por ensima. La metes pal hornico y a mirar un ratillo para aser ver que todo va bien. Para finalisar, cogemos a la parienta y (corten). Para finalisar cogemos los guantesicos de la iaia y la sacamos sin quemarnos yuis, y ya ta, una croquitatah y palaboca. caproveche!", //recipe.description,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Color.fromARGB(200, 86, 61, 94),
-                  ),
-                ),
+                (widget.info.elaboration != null)
+                    ? Text(
+                        widget.info.elaboration, //recipe.description,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(200, 86, 61, 94),
+                        ),
+                      )
+                    : Text(
+                        "There is no description", //recipe.description,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(200, 86, 61, 94),
+                        ),
+                      ),
 
                 SizedBox(height: 20),
                 Divider(
