@@ -206,7 +206,9 @@ class _RecipePage extends State<RecipePage> {
             child: SizedBox(
               height: 300,
               width: 300,
-              child: Image.network(widget.info.url_image),
+              child: (widget.info.url_image != null)
+                  ? Image.network(widget.info.url_image)
+                  : _foodimage(_image),
             ),
           ),
         ],
@@ -255,7 +257,9 @@ class _RecipePage extends State<RecipePage> {
                 Column(
                   children: <Widget>[
                     SizedBox(height: 35),
-                    if (widget.info.url_image != null) _readImage(),
+                    (widget.info.url_image != null)
+                        ? _readImage()
+                        : (_image != null) ? _foodimage(_image) : Text(""),
                   ],
                 )
               ],
@@ -298,54 +302,12 @@ class _RecipePage extends State<RecipePage> {
                               size: 30,
                             ),
                             onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text("Weekly recipe"),
-                                    content: new Column(
-                                      children: <Widget>[
-                                        TextField(
-                                          controller: _userCtrl,
-                                          decoration: InputDecoration(
-                                              labelText: 'User'),
-                                        ),
-                                        TextField(
-                                          controller: _timeCtrl,
-                                          decoration: InputDecoration(
-                                              labelText: 'Time (ex: 12:45)'),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: <Widget>[
-                                      // usually buttons at the bottom of the dialog
-                                      new FlatButton(
-                                        child: new Text("Close"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            weekly = !weekly;
-                                          });
-                                        },
-                                      ),
-                                      new FlatButton(
-                                        child: new Text("Accept"),
-                                        onPressed: () {
-                                          Firestore.instance
-                                              .collection('info')
-                                              .document('weeklyRecipe')
-                                              .updateData({
-                                            'id': widget.info.documentID,
-                                            'time': _timeCtrl.text,
-                                            'user': _userCtrl.text,
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                              Firestore.instance
+                                  .collection('info')
+                                  .document('weeklyRecipe')
+                                  .updateData({
+                                'id': widget.info.documentID,
+                              });
                               setState(() {
                                 weekly = !weekly;
                               });
