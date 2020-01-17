@@ -15,6 +15,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
+  final db = Firestore.instance;
+
   @override
   void initState() {
     super.initState();
@@ -275,7 +277,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildRecipesList() {
-    final db = Firestore.instance;
     RecipeFilters recipeFilters = Provider.of<RecipeFilters>(context);
 
     return StreamBuilder<QuerySnapshot>(
@@ -506,8 +507,16 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => AddRecipePage(), //number that changes
-              ),
-            );
+              )).then((recipeInfo) {
+                  db.collection('recipes').document().setData({
+                      'name': recipeInfo[0],
+                      'type': recipeInfo[1],
+                      'user': recipeInfo[2],
+                      'time': recipeInfo[3],
+                      'ingredients': recipeInfo[4],
+                      'elaboration': recipeInfo[5],
+                  });
+              });
           },
         ),
       ),
