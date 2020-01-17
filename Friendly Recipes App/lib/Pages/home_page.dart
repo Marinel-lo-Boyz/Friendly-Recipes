@@ -454,7 +454,7 @@ class _HomePageState extends State<HomePage> {
             borderRadius: radiusTile,
             child: InkWell(
               borderRadius: radiusTile,
-               onLongPress: () {
+              onLongPress: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -489,7 +489,13 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => RecipePage(), //number that changes
+                    builder: (_) => RecipePage(Info(
+                        recipe.data['name'],
+                        recipe.data['type'],
+                        recipe.data['user'],
+                        recipe.data['time'],
+                        recipe.data['ingredients'],
+                        recipe.data['elaboration'])), //number that changes
                   ),
                 );
               },
@@ -540,19 +546,20 @@ class _HomePageState extends State<HomePage> {
             size: 50,
           ),
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => AddRecipePage(), //number that changes
-              )).then((recipeInfo) {
-                  db.collection('recipes').document().setData({
-                      'name': recipeInfo[0],
-                      'type': recipeInfo[1],
-                      'user': recipeInfo[2],
-                      'time': recipeInfo[3],
-                      'ingredients': recipeInfo[4],
-                      'elaboration': recipeInfo[5],
-                  });
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+              builder: (_) => AddRecipePage(), //number that changes
+            ))
+                .then((recipeInfo) {
+              db.collection('recipes').document().setData({
+                'name': recipeInfo[0],
+                'type': recipeInfo[1],
+                'user': recipeInfo[2],
+                'time': recipeInfo[3],
+                'ingredients': recipeInfo[4],
+                'elaboration': recipeInfo[5],
               });
+            });
           },
         ),
       ),
