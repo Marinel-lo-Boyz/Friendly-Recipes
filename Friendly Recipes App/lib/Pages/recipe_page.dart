@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:friendly_recipes_app/pages/add_recipe_page.dart';
 import 'package:uuid/uuid.dart';
+import 'package:path/path.dart';
+import 'dart:async';
+import 'dart:io';
+
 
 // import 'package:friendly_recipes_app/pages/home_page.dart';
 class Info {
@@ -31,7 +35,7 @@ class RecipePage extends StatefulWidget {
 class _RecipePage extends State<RecipePage> {
   bool fav = false;
   bool weekly = false;
-  dynamic _image;
+  File _image;
   TextEditingController _typeCtrl, _userCtrl, _timeCtrl;
   List<Item> _dataType =
       generateItems(1, "Type", ["Starter", "Main dish", "Dessert"]);
@@ -132,26 +136,36 @@ class _RecipePage extends State<RecipePage> {
     _uploadImageFirebase(image);
   }
 
-  Future _uploadImageFirebase(dynamic _image) async {
-    if (_image != null) {
-      var imageName = Uuid().v1();
-      var imagePath = "/recipes/$_image.jpg";
-      final StorageReference storageReference =
-          FirebaseStorage().ref().child(imagePath);
-      final StorageUploadTask uploadTask = storageReference.putFile(_image);
-      final StreamSubscription<StorageTaskEvent> streamSubscription =
-          uploadTask.events.listen((event) {
-        // You can use this to notify yourself or your user in any kind of way.
-        // For example: you could use the uploadTask.events stream in a StreamBuilder instead
-        // to show your user what the current status is. In that case, you would not need to cancel any
-        // subscription as StreamBuilder handles this automatically.
+  Future _uploadImageFirebase(File _image) async {
 
-        // Here, every StorageTaskEvent concerning the upload is printed to the logs.
-        print('EVENT ${event.type}');
-      });
-      await uploadTask.onComplete;
-      streamSubscription.cancel();
-    }
+    String fileName = basename(_image.path);
+    StorageReference firebaseStorage = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorage.putFile(_image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    setState(() {
+      print("Profile Picture uploaded");
+    });
+    
+    
+    // if (_image != null) {
+    //   var imageName = Uuid().v1();
+    //   var imagePath = "/recipes/$_image.jpg";
+    //   final StorageReference storageReference =
+    //       FirebaseStorage().ref().child(imagePath);
+    //   final StorageUploadTask uploadTask = storageReference.putFile(_image);
+    //   final StreamSubscription<StorageTaskEvent> streamSubscription =
+    //       uploadTask.events.listen((event) {
+    //     // You can use this to notify yourself or your user in any kind of way.
+    //     // For example: you could use the uploadTask.events stream in a StreamBuilder instead
+    //     // to show your user what the current status is. In that case, you would not need to cancel any
+    //     // subscription as StreamBuilder handles this automatically.
+
+    //     // Here, every StorageTaskEvent concerning the upload is printed to the logs.
+    //     print('EVENT ${event.type}');
+    //   });
+    //   await uploadTask.onComplete;
+    //   streamSubscription.cancel();
+    // }
   }
 
   Widget _foodimage(dynamic _image) {
@@ -391,6 +405,7 @@ class _RecipePage extends State<RecipePage> {
       ),
     );
   }
+
 }
 
 class _Info extends StatefulWidget {
