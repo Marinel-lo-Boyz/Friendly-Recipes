@@ -126,7 +126,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
               'name': _nameCtrl.text,
               'type':  _typeCtrl.text,
               'user':  'Lluis99',
-              'time':  DateTime.now(),
+              'time':  DateTime.now().toString(),
               'ingredients': _ingredientsCtrl.text,
               'elaboration':  _elaborationCtrl.text,
             });
