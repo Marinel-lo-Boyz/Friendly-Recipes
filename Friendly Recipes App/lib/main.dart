@@ -4,6 +4,7 @@ import 'package:friendly_recipes_app/Providers/recipe_filters.dart';
 import 'package:provider/provider.dart';
 
 import 'Pages/user_page.dart';
+import 'Providers/user_data.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +14,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => RecipeFilters(),)
+        ChangeNotifierProvider(
+          create: (context) => RecipeFilters(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserData(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -23,7 +29,6 @@ class MyApp extends StatelessWidget {
         // home: UserPage(),
         home: UserPage(),
       ),
-      
     );
   }
 }

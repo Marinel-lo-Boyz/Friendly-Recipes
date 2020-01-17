@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:friendly_recipes_app/Providers/user_data.dart';
 import 'package:friendly_recipes_app/Widgets/shaded_container.dart';
 import 'package:friendly_recipes_app/Widgets/shaded_flat_button.dart';
 import 'package:friendly_recipes_app/Widgets/small_feature_text.dart';
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final db = Firestore.instance;
   RecipeFilters recipeFilters;
+  UserData userData;
 
   @override
   void initState() {
@@ -30,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     recipeFilters = Provider.of<RecipeFilters>(context);
+    userData = Provider.of<UserData>(context);
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -249,17 +252,25 @@ class _HomePageState extends State<HomePage> {
         bool noFilterActive = true;
 
         recipeFilters.filters.forEach((k, v) {
-          if (v == true) {
+          if (v == true && k != 'Fav') {
             noFilterActive = false;
           }
         });
 
+        if (recipeFilters.filters['Fav'] == true) {
+          recipes.removeWhere((doc) => !userData.isFavorite(doc.documentID));
+        }
+
         if (!noFilterActive) {
-          recipeFilters.filters.forEach((k, v) {
-            if (v == false) {
-              recipes.removeWhere((doc) => doc.data['type'] == k);
-            }
-          });
+          recipeFilters.filters.forEach(
+            (k, v) {
+              if (v == false) {
+                if (k != 'Fav') {
+                  recipes.removeWhere((doc) => doc.data['type'] == k);
+                }
+              }
+            },
+          );
         }
 
         if (recipeFilters.searchText != '') {
@@ -396,15 +407,16 @@ class _HomePageState extends State<HomePage> {
             );
           },
           onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => RecipePage(Info(
-                        recipe.data['name'],
-                        recipe.data['type'],
-                        recipe.data['user'],
-                        recipe.data['time'],
-                        recipe.data['ingredients'],
-                        recipe.data['elaboration'])), //number that changesnumber that changes
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => RecipePage(Info(
+                    recipe.data['name'],
+                    recipe.data['type'],
+                    recipe.data['user'],
+                    recipe.data['time'],
+                    recipe.data['ingredients'],
+                    recipe.data[
+                        'elaboration'])), //number that changesnumber that changes
               ),
             );
           },

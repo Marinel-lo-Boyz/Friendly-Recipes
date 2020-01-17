@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:friendly_recipes_app/Pages/home_page.dart';
+import 'package:friendly_recipes_app/Providers/user_data.dart';
 import 'package:friendly_recipes_app/Widgets/custom_text_field.dart';
 import 'package:friendly_recipes_app/Widgets/shaded_container.dart';
 import 'package:friendly_recipes_app/Widgets/shaded_flat_button.dart';
+import 'package:provider/provider.dart';
 
 class UserPage extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   final db = Firestore.instance;
   List<DocumentSnapshot> users;
+  UserData userData;
+
   String userStr;
   String passwordStr;
   String currentError;
@@ -29,18 +33,19 @@ class _UserPageState extends State<UserPage> {
   }
 
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: db.collection('users').orderBy('name').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
+     userData = Provider.of<UserData>(context);
+    return Scaffold(
+      resizeToAvoidBottomPadding: false,
+      body: StreamBuilder<QuerySnapshot>(
+          stream: db.collection('users').snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-          users = snapshot.data.documents;
+            users = snapshot.data.documents;
 
-          return Scaffold(
-            resizeToAvoidBottomPadding: false,
-            body: MediaQuery.removePadding(
+            return MediaQuery.removePadding(
               context: context,
               removeTop: true,
               child: ListView(
@@ -97,27 +102,35 @@ class _UserPageState extends State<UserPage> {
                         passwordStr = text;
                       }),
                       SizedBox(height: 22),
+                      if (currentError != '')
+                        Text(
+                          currentError,
+                          style: TextStyle(
+                              color: Colors.red, fontFamily: 'Berlin Sans'),
+                        ),
+                      if (currentError != '')
+                        SizedBox(
+                          height: 20,
+                        ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           ShadedFlatButton('Sing In', () => singIn()),
                           SizedBox(width: 22),
-                          ShadedFlatButton('Log In', ()=> logIn()),
+                          ShadedFlatButton('Log In', () => logIn()),
                         ],
                       ),
-                      (currentError != '')
-                          ? Text(currentError)
-                          : Text(''),
                     ],
                   )
                 ],
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 
   singIn() {
+
     if (userStr == '' || passwordStr == '') {
       setState(() {
         currentError = 'Not valid user or password';
@@ -142,12 +155,25 @@ class _UserPageState extends State<UserPage> {
         'password': passwordStr,
       },
     );
+
+    // DocumentReference doc =   db.collection('users').document();
+    // doc.get().then((docSnap) {
+    //   userData.document = docSnap;
+    // });
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => HomePage(), //number that changesnumber that changes
+      ),
+    );
   }
 
   logIn() {
     for (int index = 0; index < users.length; ++index) {
       if (users[index].data['name'] == userStr) {
         if (users[index].data['password'] == passwordStr) {
+          userData.favoriteIds = List.from(users[index].data['favorites']);
+          userData.document = users[index];
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) =>
