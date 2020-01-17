@@ -21,11 +21,10 @@ class Info {
       time,
       ingredients,
       elaboration,
-      id,
       documentID,
       url_image;
   Info(this.title, this.type, this.user, this.time, this.ingredients,
-      this.elaboration, this.id, this.documentID, this.url_image);
+      this.elaboration, this.documentID, this.url_image);
 }
 
 class RecipePage extends StatefulWidget {
@@ -45,6 +44,8 @@ class _RecipePage extends State<RecipePage> {
   List<Item> _dataType =
       generateItems(1, "Type", ["Starter", "Main", "Dessert"]);
   UserData userData;
+  
+
 
   @override
   void initState() {
@@ -326,12 +327,7 @@ class _RecipePage extends State<RecipePage> {
                                       new FlatButton(
                                         child: new Text("Accept"),
                                         onPressed: () {
-                                          // final db = Firestore.instance;
-                                          // db
-                                          //     .collection('recipes')
-                                          //     .document(recipe.documentID)
-                                          //     .delete();
-                                          // Navigator.of(context).pop();
+                                         Firestore.instance.collection('info').document('weeklyRecipe').updateData({'id' : widget.info.documentID});
                                         },
                                       ),
                                     ],
@@ -361,17 +357,17 @@ class _RecipePage extends State<RecipePage> {
                       backgroundColor: Colors.white,
                       child: Icon(
                         Icons.favorite_border,
-                        color: (userData.isFavorite(widget.info.id))
+                        color: (userData.isFavorite(widget.info.documentID))
                             ? Colors.red
                             : Colors.blueGrey,
                         size: 30,
                       ),
                       onPressed: () {
                         setState(() {
-                          if (userData.isFavorite(widget.info.id)) {
-                            userData.removeFavorite(widget.info.id);
+                          if (userData.isFavorite(widget.info.documentID)) {
+                            userData.removeFavorite(widget.info.documentID);
                           } else {
-                            userData.addFavorite(widget.info.id);
+                            userData.addFavorite(widget.info.documentID);
                           }
                         });
                       },
