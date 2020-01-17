@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,95 +47,96 @@ class _UserPageState extends State<UserPage> {
 
             users = snapshot.data.documents;
 
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: 30,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            return ListView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 30,
+                ),
                 children: <Widget>[
-                  SizedBox(height: 200),
-                  ShadedContainer(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image(
-                          image: AssetImage('assets/icon.png'),
-                          height: 50,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 22),
-                  Center(
-                    child: Text(
-                      'Friendly Recipes',
-                      style: TextStyle(
-                          shadows: [
-                            Shadow(
-                              blurRadius: 4,
-                              color: Colors.black26,
-                              offset: Offset(0, 4),
-                            )
-                          ],
-                          fontFamily: 'Berlin Sans',
-                          fontWeight: FontWeight.w900,
-                          fontSize: 36,
-                          color: Colors.black54),
-                    ),
-                  ),
-                  SizedBox(height: 22),
-                  CustomTextField(
-                    'User',
-                    Icons.person,
-                    (text) {
-                      setState(() {
-                        userStr = text;
-                      });
-                    },
-                    myController: userCtrl,
-                  ),
-                  SizedBox(height: 22),
-                  CustomTextField(
-                    'Password',
-                    Icons.vpn_key,
-                    (text) {
-                      setState(() {
-                        passwordStr = text;
-                      });
-                    },
-                    myController: passwordCtrl,
-                  ),
-                  SizedBox(height: 22),
-                  if (currentError != '')
-                    Text(
-                      currentError,
-                      style: TextStyle(
-                          color: Colors.red, fontFamily: 'Berlin Sans'),
-                    ),
-                  if (currentError != '')
-                    SizedBox(
-                      height: 20,
-                    ),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      ShadedFlatButton('Sign In', () => signIn()),
-                      SizedBox(width: 22),
-                      ShadedFlatButton('Log In', () => logIn()),
+                      SizedBox(height: 200),
+                      ShadedContainer(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: Image(
+                              image: AssetImage('assets/icon.png'),
+                              height: 50,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 22),
+                      Center(
+                        child: Text(
+                          'Friendly Recipes',
+                          style: TextStyle(
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 4,
+                                  color: Colors.black26,
+                                  offset: Offset(0, 4),
+                                )
+                              ],
+                              fontFamily: 'Berlin Sans',
+                              fontWeight: FontWeight.w900,
+                              fontSize: 36,
+                              color: Colors.black54),
+                        ),
+                      ),
+                      SizedBox(height: 22),
+                      CustomTextField(
+                        'User',
+                        Icons.person,
+                        (text) {
+                          setState(() {
+                            userStr = text;
+                          });
+                        },
+                        myController: userCtrl,
+                      ),
+                      SizedBox(height: 22),
+                      CustomTextField(
+                        'Password',
+                        Icons.vpn_key,
+                        (text) {
+                          setState(() {
+                            passwordStr = text;
+                          });
+                        },
+                        myController: passwordCtrl,
+                      ),
+                      SizedBox(height: 22),
+                      if (currentError != '')
+                        Text(
+                          currentError,
+                          style: TextStyle(
+                              color: Colors.red, fontFamily: 'Berlin Sans'),
+                        ),
+                      if (currentError != '')
+                        SizedBox(
+                          height: 20,
+                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          ShadedFlatButton('Sign In', () => signIn()),
+                          SizedBox(width: 22),
+                          ShadedFlatButton('Log In', () => logIn()),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-            );
+                ]);
           }),
     );
   }
@@ -160,13 +160,11 @@ class _UserPageState extends State<UserPage> {
       }
     }
 
-
-    
     db.collection('users').document().setData(
       {
         'name': userStr,
         'password': passwordStr,
-        'favorites' : [] ,
+        'favorites': [],
       },
     );
 
