@@ -138,44 +138,138 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildWeeklyRecipeSection() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 18.0, // has the effect of softening the shadow
-                  spreadRadius: 3.0, // has the effect of extending the shadow
-                  offset: Offset(0, 10.0),
-                )
-              ],
-            ),
-            child: Container(
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: EdgeInsets.all(5),
-              child: Center(
-                child: Text(
-                  'Weekly Recipe',
-                  softWrap: false,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Berlin Sans',
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    // String id = 'initial';
+    // db.collection('info').document('weeklyRecipe').get().then((onValue) {
+    //   id = onValue.data['id'];
+    // });
+
+    return StreamBuilder<DocumentSnapshot>(
+        stream: db.collection('info').document('weeklyRecipe').snapshots(),
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            DocumentSnapshot doc;
+            String id = snapshot.data['id'];
+            db.collection('recipes').document(id).get().then((docSnap) {
+              doc = docSnap;
+            });
+            return StreamBuilder<DocumentSnapshot>(
+                stream: db.collection('recipes').document(id).snapshots(),
+                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  return Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius:
+                                    18.0, // has the effect of softening the shadow
+                                spreadRadius:
+                                    3.0, // has the effect of extending the shadow
+                                offset: Offset(0, 10.0),
+                              )
+                            ],
+                          ),
+                          child: Container(
+                            height: 120,
+                            child: new Material(
+                              child: new InkWell(
+                                onTap: () {
+                                  // Navigator.of(context).push(
+                                  //   MaterialPageRoute(
+                                  //     builder: (_) => RecipePage(Info(
+                                  //         doc.data['name'],
+                                  //         doc.data['type'],
+                                  //         doc.data['user'],
+                                  //         doc.data['time'],
+                                  //         doc.data['ingredients'],
+                                  //         doc.data[
+                                  //             'elaboration'])), //number that changesnumber that changes
+                                  //   ),
+                                  // );
+                                },
+                                child: Row(
+                                  children: <Widget>[
+                                    AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.orange,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            child: Image.network(
+                                              'https://www.laespanolaaceites.com/wp-content/uploads/2019/06/pizza-con-chorizo-jamon-y-queso-1080x671.jpg',
+                                              fit: BoxFit.fitHeight,
+                                            )),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15,
+                                        vertical: 10,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                //'name',
+                                                snapshot.data['name'],
+                                                style: TextStyle(
+                                                  fontFamily: 'Berlin Sans',
+                                                  color: Colors.blueGrey,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          SmallFeatureText(
+                                            'User',
+                                            Icons.person,
+                                          ),
+                                          SmallFeatureText(
+                                            'Type',
+                                            Icons.cake,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              color: Colors.transparent,
+                            ),
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                });
+          }
+        });
   }
 
   Widget buildFilters() {
