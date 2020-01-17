@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Item {
@@ -48,7 +49,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
     color: Colors.black45,
   );
 
-    TextStyle textStyle2 = TextStyle(
+  TextStyle textStyle2 = TextStyle(
     fontFamily: 'Berlin Sans',
     color: Colors.black38,
   );
@@ -65,6 +66,28 @@ class _AddRecipePageState extends State<AddRecipePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.grey, size: 16.0),
+        title: Row(
+          children: <Widget>[
+            Text(
+              'Add Recipe',
+              style: TextStyle(
+                  fontFamily: 'Berlin Sans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Colors.black54),
+            ),
+            SizedBox(width: 8),
+            Image(
+              image: AssetImage('assets/icon.png'),
+              height: 50,
+              fit: BoxFit.fill,
+            ),
+          ],
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 35, vertical: 40),
         children: <Widget>[
@@ -95,27 +118,19 @@ class _AddRecipePageState extends State<AddRecipePage> {
           ),
           SizedBox(height: 4),
           buildCustomTextField('Elaboration', _elaborationCtrl),
-          SizedBox(height: 20),
-          FlatButton(
-            child: Text(
-              'ADD',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            color: Colors.red,
-            shape: StadiumBorder(),
-            onPressed: () {
-              Navigator.of(context).pop({
-                'title': _nameCtrl.text,
-                'type': _typeCtrl.text,
-                'user': 'xXLluis99Xx',
-                'time': 'Monday',
-                'ingredients': _ingredientsCtrl.text,
-                'elaboration': _elaborationCtrl.text,
-              });
-            },
-          )
+          SizedBox(height: 40),
+          buildPublishButton(() {
+            final db = Firestore.instance;
+            db.collection('recipes').document().setData({
+              'name': _nameCtrl.text,
+              'type':  _typeCtrl.text,
+              'user':  'Lluis99',
+              'time':  DateTime.now(),
+              'ingredients': _ingredientsCtrl.text,
+              'elaboration':  _elaborationCtrl.text,
+            });
+            Navigator.of(context).pop();
+          })
         ],
       ),
     );
@@ -221,6 +236,41 @@ class _AddRecipePageState extends State<AddRecipePage> {
           isExpanded: item.isExpanded,
         );
       }).toList(),
+    );
+  }
+
+  Widget buildPublishButton(Function onPress) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10.0, // has the effect of softening the shadow
+            spreadRadius: 4.0, // has the effect of extending the shadow
+            offset: Offset(0, 8),
+          )
+        ],
+      ),
+      child: SizedBox(
+        height: 65,
+        child: FlatButton(
+          color: Colors.white,
+          shape: StadiumBorder(),
+          child: Center(
+            child: Text(
+              "Publish",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Berlin Sans',
+                fontSize: 28,
+                color: Colors.blueGrey,
+              ),
+            ),
+          ),
+          onPressed: onPress,
+        ),
+      ),
     );
   }
 }

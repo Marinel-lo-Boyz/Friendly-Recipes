@@ -15,6 +15,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
+  final db = Firestore.instance;
+
   @override
   void initState() {
     super.initState();
@@ -275,7 +277,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildRecipesList() {
-    final db = Firestore.instance;
     RecipeFilters recipeFilters = Provider.of<RecipeFilters>(context);
 
     return StreamBuilder<QuerySnapshot>(
@@ -387,14 +388,18 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        recipe.data['name'],
-                        style: TextStyle(
-                          fontFamily: 'Berlin Sans',
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            recipe.data['name'],
+                            style: TextStyle(
+                              fontFamily: 'Berlin Sans',
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 10,
@@ -449,6 +454,38 @@ class _HomePageState extends State<HomePage> {
             borderRadius: radiusTile,
             child: InkWell(
               borderRadius: radiusTile,
+               onLongPress: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // return object of type Dialog
+                    return AlertDialog(
+                      title: new Text("Delete recipe"),
+                      content: new Text("Recipe can not be recovered"),
+                      actions: <Widget>[
+                        // usually buttons at the bottom of the dialog
+                        new FlatButton(
+                          child: new Text("Close"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        new FlatButton(
+                          child: new Text("Delete"),
+                          onPressed: () {
+                            final db = Firestore.instance;
+                            db
+                                .collection('recipes')
+                                .document(recipe.documentID)
+                                .delete();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -506,8 +543,16 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => AddRecipePage(), //number that changes
-              ),
-            );
+              )).then((recipeInfo) {
+                  db.collection('recipes').document().setData({
+                      'name': recipeInfo[0],
+                      'type': recipeInfo[1],
+                      'user': recipeInfo[2],
+                      'time': recipeInfo[3],
+                      'ingredients': recipeInfo[4],
+                      'elaboration': recipeInfo[5],
+                  });
+              });
           },
         ),
       ),
