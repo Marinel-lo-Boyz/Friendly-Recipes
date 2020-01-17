@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   final db = Firestore.instance;
   List<DocumentSnapshot> users;
+  TextEditingController userCtrl;
+  TextEditingController passwordCtrl;
   UserData userData;
 
   String userStr;
@@ -33,9 +36,9 @@ class _UserPageState extends State<UserPage> {
   }
 
   Widget build(BuildContext context) {
-     userData = Provider.of<UserData>(context);
+    userData = Provider.of<UserData>(context);
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: StreamBuilder<QuerySnapshot>(
           stream: db.collection('users').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -45,83 +48,92 @@ class _UserPageState extends State<UserPage> {
 
             users = snapshot.data.documents;
 
-            return MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              child: ListView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 30,
-                ),
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: 30,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      SizedBox(height: 200),
-                      ShadedContainer(
+                  SizedBox(height: 200),
+                  ShadedContainer(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: Image(
-                              image: AssetImage('assets/icon.png'),
-                              height: 50,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Image(
+                          image: AssetImage('assets/icon.png'),
+                          height: 50,
+                          fit: BoxFit.fill,
                         ),
                       ),
-                      SizedBox(height: 22),
-                      Center(
-                        child: Text(
-                          'Friendly Recipes',
-                          style: TextStyle(
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 4,
-                                  color: Colors.black26,
-                                  offset: Offset(0, 4),
-                                )
-                              ],
-                              fontFamily: 'Berlin Sans',
-                              fontWeight: FontWeight.w900,
-                              fontSize: 36,
-                              color: Colors.black54),
-                        ),
-                      ),
-                      SizedBox(height: 22),
-                      CustomTextField('User', Icons.person, (text) {
+                    ),
+                  ),
+                  SizedBox(height: 22),
+                  Center(
+                    child: Text(
+                      'Friendly Recipes',
+                      style: TextStyle(
+                          shadows: [
+                            Shadow(
+                              blurRadius: 4,
+                              color: Colors.black26,
+                              offset: Offset(0, 4),
+                            )
+                          ],
+                          fontFamily: 'Berlin Sans',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 36,
+                          color: Colors.black54),
+                    ),
+                  ),
+                  SizedBox(height: 22),
+                  CustomTextField(
+                    'User',
+                    Icons.person,
+                    (text) {
+                      setState(() {
                         userStr = text;
-                      }),
-                      SizedBox(height: 22),
-                      CustomTextField('Password', Icons.vpn_key, (text) {
+                      });
+                    },
+                    myController: userCtrl,
+                  ),
+                  SizedBox(height: 22),
+                  CustomTextField(
+                    'Password',
+                    Icons.vpn_key,
+                    (text) {
+                      setState(() {
                         passwordStr = text;
-                      }),
-                      SizedBox(height: 22),
-                      if (currentError != '')
-                        Text(
-                          currentError,
-                          style: TextStyle(
-                              color: Colors.red, fontFamily: 'Berlin Sans'),
-                        ),
-                      if (currentError != '')
-                        SizedBox(
-                          height: 20,
-                        ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          ShadedFlatButton('Sign In', () => signIn()),
-                          SizedBox(width: 22),
-                          ShadedFlatButton('Log In', () => logIn()),
-                        ],
-                      ),
+                      });
+                    },
+                    myController: passwordCtrl,
+                  ),
+                  SizedBox(height: 22),
+                  if (currentError != '')
+                    Text(
+                      currentError,
+                      style: TextStyle(
+                          color: Colors.red, fontFamily: 'Berlin Sans'),
+                    ),
+                  if (currentError != '')
+                    SizedBox(
+                      height: 20,
+                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ShadedFlatButton('Sign In', () => signIn()),
+                      SizedBox(width: 22),
+                      ShadedFlatButton('Log In', () => logIn()),
                     ],
-                  )
+                  ),
                 ],
               ),
             );
@@ -130,7 +142,6 @@ class _UserPageState extends State<UserPage> {
   }
 
   signIn() {
-
     if (userStr == '' || passwordStr == '') {
       setState(() {
         currentError = 'Not valid user or password';
@@ -149,17 +160,20 @@ class _UserPageState extends State<UserPage> {
       }
     }
 
+
+    
     db.collection('users').document().setData(
       {
         'name': userStr,
         'password': passwordStr,
+        'favorites' : [] ,
       },
     );
 
-    // DocumentReference doc =   db.collection('users').document();
-    // doc.get().then((docSnap) {
-    //   userData.document = docSnap;
-    // });
+    DocumentReference doc = db.collection('users').document();
+    doc.get().then((docSnap) {
+      userData.document = docSnap;
+    });
 
     Navigator.of(context).push(
       MaterialPageRoute(

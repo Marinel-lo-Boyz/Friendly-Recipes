@@ -331,8 +331,8 @@ class _HomePageState extends State<HomePage> {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
-                        'https://www.laespanolaaceites.com/wp-content/uploads/2019/06/pizza-con-chorizo-jamon-y-queso-1080x671.jpg',
-                        fit: BoxFit.fitHeight,
+                        (recipe.data['url_image']!= null) ? recipe.data['url_image'] : 'https://media-cdn.tripadvisor.com/media/photo-s/18/1a/d5/1e/casteloes.jpg',
+                        fit: BoxFit.cover,
                       )),
                 ),
               ),
