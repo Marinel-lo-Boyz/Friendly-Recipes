@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,18 +11,18 @@ import 'package:path/path.dart';
 import 'dart:async';
 import 'dart:io';
 
-
 // import 'package:friendly_recipes_app/pages/home_page.dart';
 class Info {
-  String title, type, user, time, ingredients, elaboration;
-  Info(
-    this.title,
-    this.type,
-    this.user,
-    this.time,
-    this.ingredients,
-    this.elaboration,
-  );
+  String title,
+      type,
+      user,
+      time,
+      ingredients,
+      elaboration,
+      documentID,
+      url_image;
+  Info(this.title, this.type, this.user, this.time, this.ingredients,
+      this.elaboration, this.documentID, this.url_image);
 }
 
 class RecipePage extends StatefulWidget {
@@ -36,6 +37,7 @@ class _RecipePage extends State<RecipePage> {
   bool fav = false;
   bool weekly = false;
   File _image;
+
   TextEditingController _typeCtrl, _userCtrl, _timeCtrl;
   List<Item> _dataType =
       generateItems(1, "Type", ["Starter", "Main dish", "Dessert"]);
@@ -137,16 +139,19 @@ class _RecipePage extends State<RecipePage> {
   }
 
   Future _uploadImageFirebase(File _image) async {
-
     String fileName = basename(_image.path);
-    StorageReference firebaseStorage = FirebaseStorage.instance.ref().child(fileName);
+    StorageReference firebaseStorage =
+        FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorage.putFile(_image);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    setState(() {
-      print("Profile Picture uploaded");
-    });
-    
-    
+    // setState(() {
+    //   print("Profile Picture uploaded");
+    // });
+    final db = Firestore.instance;
+    db.collection('recipes').document(widget.info.documentID).setData({
+      'url_image': (await firebaseStorage.getDownloadURL()).toString(),
+    }, merge: true);
+
     // if (_image != null) {
     //   var imageName = Uuid().v1();
     //   var imagePath = "/recipes/$_image.jpg";
@@ -183,6 +188,25 @@ class _RecipePage extends State<RecipePage> {
                 image: FileImage(_image),
                 fit: BoxFit.fill,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _readImage()  {
+    return  Container(
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 12),
+          ),
+          ClipOval(
+            child: SizedBox(
+              height: 300,
+              width: 300,
+              child:  Image.network(widget.info.url_image),
             ),
           ),
         ],
@@ -229,10 +253,7 @@ class _RecipePage extends State<RecipePage> {
                 Column(
                   children: <Widget>[
                     SizedBox(height: 35),
-                    _image == null ? Text('') : _foodimage(_image),
-
-                    // new Text(Image.file(_image).width.toString(),
-                    //     style: TextStyle(fontSize: 90)),
+                    if (widget.info.url_image != null) _readImage(),
                   ],
                 )
               ],
@@ -405,7 +426,6 @@ class _RecipePage extends State<RecipePage> {
       ),
     );
   }
-
 }
 
 class _Info extends StatefulWidget {

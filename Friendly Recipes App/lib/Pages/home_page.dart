@@ -415,8 +415,9 @@ class _HomePageState extends State<HomePage> {
                     recipe.data['user'],
                     recipe.data['time'],
                     recipe.data['ingredients'],
-                    recipe.data[
-                        'elaboration'])), //number that changesnumber that changes
+                    recipe.data['elaboration'],
+                    recipe.documentID,
+                    recipe.data['url_image'])),
               ),
             );
           },
