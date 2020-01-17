@@ -223,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                      SmallFeatureText(
                                       snapshot_1.data['time'],
-                                      Icons.cake,
+                                      Icons.hourglass_empty,
                                     ),
                                   ],
                                 ),
