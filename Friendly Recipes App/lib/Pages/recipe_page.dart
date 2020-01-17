@@ -38,14 +38,11 @@ class RecipePage extends StatefulWidget {
 class _RecipePage extends State<RecipePage> {
   bool fav = false;
   bool weekly = false;
-  // TextEditingController _typeCtrl, _userCtrl, _timeCtrl;
-  TextEditingController _typeCtrl, _timeCtrl;
+  TextEditingController _typeCtrl, _timeCtrl, _userCtrl;
   File _image;
   List<Item> _dataType =
       generateItems(1, "Type", ["Starter", "Main", "Dessert"]);
   UserData userData;
-  
-
 
   @override
   void initState() {
@@ -309,8 +306,16 @@ class _RecipePage extends State<RecipePage> {
                                     title: new Text("Weekly recipe"),
                                     content: new Column(
                                       children: <Widget>[
-                                        _buildPanel(_dataType, _typeCtrl),
-                                        // _buildPanel(_dataUsers, _userCtrl),
+                                        TextField(
+                                          controller: _userCtrl,
+                                          decoration: InputDecoration(
+                                              labelText: 'User'),
+                                        ),
+                                        TextField(
+                                          controller: _timeCtrl,
+                                          decoration: InputDecoration(
+                                              labelText: 'Time (ex: 12:45)'),
+                                        ),
                                       ],
                                     ),
                                     actions: <Widget>[
@@ -327,7 +332,14 @@ class _RecipePage extends State<RecipePage> {
                                       new FlatButton(
                                         child: new Text("Accept"),
                                         onPressed: () {
-                                         Firestore.instance.collection('info').document('weeklyRecipe').updateData({'id' : widget.info.documentID});
+                                          Firestore.instance
+                                              .collection('info')
+                                              .document('weeklyRecipe')
+                                              .updateData({
+                                            'id': widget.info.documentID,
+                                            'time': _timeCtrl.text,
+                                            'user': _userCtrl.text,
+                                          });
                                         },
                                       ),
                                     ],
