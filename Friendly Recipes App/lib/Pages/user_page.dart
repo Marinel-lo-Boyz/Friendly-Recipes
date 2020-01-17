@@ -172,8 +172,8 @@ class _UserPageState extends State<UserPage> {
     for (int index = 0; index < users.length; ++index) {
       if (users[index].data['name'] == userStr) {
         if (users[index].data['password'] == passwordStr) {
-          userData.favoriteIds = List.from(users[index].data['favorites']);
           userData.document = users[index];
+          userData.updateList();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) =>
