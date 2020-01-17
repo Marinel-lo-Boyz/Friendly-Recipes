@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.teal,
         ),
         // home: UserPage(),
-        home: HomePage(),
+        home: UserPage(),
       ),
       
     );
